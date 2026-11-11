@@ -81,10 +81,7 @@ service cloud.firestore {
   match /users/{uid}/curriculum/{activityId}{
    allow read: if verifiedOwner(uid);
    allow create,update: if verifiedOwner(uid)
-    && activityId.matches('^u4-[a-z0-9-]{1,70}{allow read,write: if false;}
- }
-}
-)
+    && activityId.matches('^u4-[a-z0-9-]{1,70}$')
     && request.resource.data.keys().hasOnly(['activityId','lessonId','response','mode','correct','bestCorrect','attempts','updatedAt'])
     && request.resource.data.activityId==activityId
     && validLesson(request.resource.data.lessonId)
