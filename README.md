@@ -1,32 +1,49 @@
-# English Quest
+# English Quest — Grade 7 Bilingual Study Platform
 
-A textbook-first, gamified English learning MVP for Grade 7 (Global Success). Initial learning slice: Unit 4 — Getting Started, *A Talk at the School Gate*.
+React + Vite + TypeScript + Tailwind + Firebase. Unit 4 (*Music and Arts*) contains seven **original, textbook-aligned companion** lessons and a Learning Studio. It does not reproduce the textbook or promise ACTFL certification.
 
-## Stack
-React + Vite + TypeScript + Tailwind CSS; Firebase Auth/Firestore (optional until configured); deployable to Vercel.
+## Development
 
-## Run locally
-```bash
+```sh
 npm install
 cp .env.example .env.local
 npm run dev
+npm run build
 ```
-On Windows PowerShell use `Copy-Item .env.example .env.local`. Fill in your Firebase web app config values in `.env.local`. The app runs with local progress if Firebase is not configured.
 
-## Configure Firebase
-1. Create/verify a Firebase Web App under project `english-quest-6a724`.
-2. Enable **Authentication → Sign-in method → Anonymous** for the current prototype, if desired.
-3. Create a Cloud Firestore database, then publish the supplied `firestore.rules` using the Firebase console or Firebase CLI. **Rules are not deployed simply by pushing to GitHub.**
-4. Use a test account and verify isolation of per-user progress; current client-reported scores are not trusted for grading, rankings, or XP.
-5. Configure the same `VITE_FIREBASE_*` values in Vercel project environment variables and deploy.
+Use `Copy-Item .env.example .env.local` in Windows PowerShell. Fill `VITE_FIREBASE_*` with the Firebase **web app config**; never use Firebase Admin/service-account secrets in Vite.
 
-## Safety and scope
-- This is an early MVP with **sample** lesson questions, not a reproduction of the textbook's copyrighted exercises.
-- The Teacher Studio is an **unprotected demo**; do not store personal student data or teacher-only answer keys there until authorization is built.
-- Anonymous user accounts do not survive loss of their authentication state; proper accounts and recovery belong in the next milestone.
-- Firebase Web SDK config isn't an admin credential. Never commit service account keys or private credentials.
-- Firestore rules restrict ownership, but **cannot validate whether a student's quiz answer is correct**. For trusted scores, calculate results on a trusted backend before awarding XP.
-- YouTube embed availability and content must be checked by the publisher.
+## Activate **real** student accounts and cloud storage
 
-## Next milestone
-Implement teacher/student authorization, server-validated assessment, accessible flashcards, spaced review, and usability testing with the target learner. Keep textbook content rights and children's privacy in scope.
+1. Visit [Firebase Console — English Quest](https://console.firebase.google.com/project/english-quest-6a724/overview).
+2. **Build → Authentication → Get started → Sign-in method → Email/Password → Enable**. Google, anonymous and other providers are not necessary for v0.3.
+3. **Authentication → Settings → Authorized domains**: include the live site `english-quest-roan-nu.vercel.app` and any additional production/preview domains you intend to test.
+4. **Build → Firestore Database → Create database** if not already created; choose a suitable region and **production mode**. Do not leave test-mode rules.
+5. **Firestore Database → Rules**: paste the checked-in [firestore.rules](firestore.rules), publish, and test from the Rules Playground. Rules are **not automatically deployed** by Vercel/GitHub.
+6. Verify site env vars under Vercel → english-quest → Settings → Environment Variables. Redeploy after changing build-time variables.
+7. Have the **parent/guardian** register with a suitable email and learner nickname (no full name or school required), click the email verification link, and on Account choose **Check verification**.
+8. Run one quiz and save one short written response. On refresh and another device (same login), verify private attempts, scores, notebook notes and free-text work survive. Sign out, create another test account and verify it cannot see the prior account's data.
+
+**IMPORTANT**: The website compiles and serves before Firebase services are enabled, but **email registration, verification, cloud writes and cross-device sync only work once steps 2–5 are complete**. No Firebase administrator credentials or verified cloud action is implied. On a shared device, sign out; email/password sessions are deliberately persistent on the browser.
+
+## Data model
+
+Cloud Firestore per registered UID:
+- `users/{uid}/progress/{lessonId}`: best and latest practice score, number of attempts
+- `users/{uid}/attempts/{randomId}`: each answer choice, score and server timestamp
+- `users/{uid}/work/{lessonId}`: written free-text task response
+- `users/{uid}/notes/unit4`: personal notebook
+
+Security rules require matching UID **and a verified email** for reads/writes, reject unknown fields and disallow attempt edits/deletion. They do not certify answer accuracy: client-side grading remains self-practice only. Each user's records are isolated; there is no public leaderboard or teacher access to student data.
+
+No identifying child age, school or full legal name is requested. Parent/guardian approval should be obtained before registration. The registration checkbox is not a legally sufficient age-verification system; obtain appropriate real-world consent.
+
+The previous anonymous session and browser-local `eq-v2-results`/notes are **not automatically imported** to any signed-in account, intentionally preventing cross-account disclosure on shared devices. To restore data from the old local prototype, a separate supervised import feature would be required.
+
+## Academic alignment
+
+See [Academic Audit and Coverage Map](docs/ACADEMIC_AUDIT.md). The 7 lessons and 21 MCQs are a **structured starting point, not full scholarly coverage or formal proficiency proof**. Authentic audio, varied tasks and teacher scoring for speaking/writing remain needed.
+
+## Notes on NotebookLM
+
+English Quest's NotebookLM button is only a user-saved URL and opens Google's separate product. This is **not** an authenticated API integration, and doesn't transfer student learning data.
