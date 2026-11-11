@@ -1,8 +1,7 @@
 import {useMemo,useState} from 'react';
-import {Award,BookOpen,ChevronRight,CircleHelp,Compass,Crown,Flag,HeartHandshake,Lightbulb,Medal,ShieldCheck,Sparkles,Star,Target,Trophy,Zap} from 'lucide-react';
+import {Award,BookOpen,ChevronRight,CircleHelp,Crown,Flag,HeartHandshake,Medal,ShieldCheck,Sparkles,Zap} from 'lucide-react';
 import type {ProgressRecord,AttemptRecord} from '../lib/studentRecords';
 import {lessonIds} from '../lib/studentRecords';
-import {unit} from '../data/unit4-full';
 
 const missions=[
  {title:'The Art Explorer',vi:'Nhà thám hiểm nghệ thuật',icon:'🎨',mode:'Interpretive',modeVi:'Đọc, nghe, hiểu',focus:'Find the topic and key information in the dialogue.',focusVi:'Tìm chủ đề và ý chính của hội thoại.'},
