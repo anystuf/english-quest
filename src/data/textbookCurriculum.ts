@@ -987,61 +987,64 @@ export const textbookPaths:TextbookLesson[]=[
         "id": "u4-lb-1",
         "exercise": "Looking Back 1",
         "source": {
-          "en": "Review music-and-arts vocabulary categories.",
-          "vi": "Ôn lại các nhóm từ vựng âm nhạc và nghệ thuật."
+          "en": "Form meaningful verb–noun combinations from the textbook's vocabulary review.",
+          "vi": "Ghép động từ với danh từ phù hợp trong phần ôn từ vựng SGK."
         },
         "title": {
-          "en": "Vocabulary review",
-          "vi": "Ôn từ vựng"
+          "en": "Choose a natural collocation",
+          "vi": "Chọn cụm từ kết hợp tự nhiên"
         },
         "kind": "choice",
         "prompt": {
-          "en": "Which word names a person rather than a place?",
-          "vi": "Từ nào chỉ người thay vì địa điểm?"
+          "en": "Which phrase is a natural English expression for an art performance?",
+          "vi": "Cụm nào là cách diễn đạt tự nhiên về biểu diễn nghệ thuật?"
         },
         "options": [
           {
-            "en": "musician",
-            "vi": "nhạc công"
+            "en": "perform a dance",
+            "vi": "biểu diễn một điệu nhảy"
           },
           {
-            "en": "art gallery",
-            "vi": "phòng tranh"
+            "en": "perform a paintbrush",
+            "vi": "biểu diễn một chiếc cọ"
           },
           {
-            "en": "concert hall",
-            "vi": "phòng hòa nhạc"
+            "en": "perform an art gallery",
+            "vi": "biểu diễn một phòng tranh"
           }
         ],
         "correct": 0,
         "explanation": {
-          "en": "Musician is a person; gallery and hall are places.",
-          "vi": "Musician là người, hai từ còn lại là địa điểm."
+          "en": "We say perform a song, a dance or a show.",
+          "vi": "Ta nói perform a song, a dance hoặc a show."
         }
       },
       {
         "id": "u4-lb-2",
         "exercise": "Looking Back 2",
         "source": {
-          "en": "Review verbs used with arts activities.",
-          "vi": "Ôn động từ thường dùng với hoạt động nghệ thuật."
+          "en": "Complete a new museum paragraph with suitable vocabulary, following Looking Back 2.",
+          "vi": "Điền từ vựng phù hợp vào đoạn văn bảo tàng mới theo dạng Looking Back 2."
         },
         "title": {
-          "en": "Complete a collocation",
-          "vi": "Điền cụm từ"
+          "en": "Museum vocabulary in context",
+          "vi": "Từ vựng bảo tàng trong ngữ cảnh"
         },
         "kind": "fill",
         "prompt": {
-          "en": "Our class will ______ a folk song at the school concert.",
-          "vi": "Lớp em sẽ ______ một bài dân ca tại hòa nhạc."
+          "en": "The town museum is opening an art ______ featuring student paintings this weekend.",
+          "vi": "Bảo tàng thị trấn sẽ khai mạc một ______ nghệ thuật trưng bày tranh học sinh cuối tuần này."
         },
         "accepted": [
-          "perform",
-          "sing"
+          "exhibition"
         ],
         "explanation": {
-          "en": "Perform or sing a song are both possible here.",
-          "vi": "Perform hoặc sing a song đều phù hợp."
+          "en": "An exhibition is a public display of artworks.",
+          "vi": "Exhibition là cuộc triển lãm/trưng bày tác phẩm nghệ thuật."
+        },
+        "context": {
+          "en": "Our town museum is welcoming visitors to a student art exhibition. The gallery will display original paintings, portraits and sculptures created by young artists.",
+          "vi": "Bảo tàng thị trấn đón khách đến triển lãm nghệ thuật học sinh. Phòng trưng bày giới thiệu tranh, chân dung và tác phẩm điêu khắc của nghệ sĩ trẻ."
         }
       },
       {
