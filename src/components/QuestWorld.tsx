@@ -1,6 +1,7 @@
 import {useMemo,useState} from 'react';
-import {Award,BookOpen,ChevronRight,CircleHelp,Crown,Flag,HeartHandshake,Medal,ShieldCheck,Sparkles,Zap} from 'lucide-react';
-import type {ProgressRecord,AttemptRecord} from '../lib/studentRecords';
+import {Award,BookOpen,ChevronRight,CircleHelp,Crown,Flag,HeartHandshake,Medal,ShieldCheck,Sparkles,Zap,Flame} from 'lucide-react';
+import type {ProgressRecord,AttemptRecord,DailySessionRecord} from '../lib/studentRecords';
+import {calculateStreak,vietnamDay} from '../lib/dailyStreak';
 import {lessonIds} from '../lib/studentRecords';
 
 const missions=[
@@ -13,11 +14,12 @@ const missions=[
  {title:'Music Show Hero',vi:'Anh hùng sân khấu',icon:'🏆',mode:'Presentational',modeVi:'Thuyết trình',focus:'Present an original school music-show invitation.',focusVi:'Giới thiệu lời mời xem biểu diễn âm nhạc.'}
 ] as const;
 
-export function gameStats(progress:Record<string,ProgressRecord>,attempts:AttemptRecord[]){
+export function gameStats(progress:Record<string,ProgressRecord>,attempts:AttemptRecord[],dailySessions:DailySessionRecord[]=[]){
  const tackled=lessonIds.filter(id=>Boolean(progress[id]));
  const perfect=lessonIds.filter(id=>progress[id]?.bestScore===3);
  // Display-only XP, earned once per topic; retaking the same quiz cannot farm points.
- const xp=lessonIds.reduce((sum,id)=>{const record=progress[id];return sum+(record?20+record.bestScore*10:0)},0);
+ const creditedDays=new Set(dailySessions.flatMap(s=>s.completedAt?.toDate?.()?[vietnamDay(s.completedAt.toDate())]:[]));
+ const xp=lessonIds.reduce((sum,id)=>{const record=progress[id];return sum+(record?20+record.bestScore*10:0)},0)+creditedDays.size*10;
  const latest=attempts.filter(a=>a.createdAt?.toDate?.()).map(a=>a.createdAt!.toDate()).sort((a,b)=>b.getTime()-a.getTime());
  const recentDays=new Set(latest.map(date=>date.toLocaleDateString('en-CA')));
  const activeDays=recentDays.size;
@@ -31,9 +33,11 @@ export function gameStats(progress:Record<string,ProgressRecord>,attempts:Attemp
  return {xp,level,tackled,perfect,activeDays,badges};
 }
 
-export function QuestWorld({progress,attempts,isLoggedIn,onOpenLesson,onOpenAccount,lang}:{progress:Record<string,ProgressRecord>;attempts:AttemptRecord[];isLoggedIn:boolean;onOpenLesson:(index:number)=>void;onOpenAccount:()=>void;lang:'en'|'vi'}){
+export function QuestWorld({progress,attempts,dailySessions,isLoggedIn,onOpenLesson,onOpenGame,onOpenAccount,lang}:{progress:Record<string,ProgressRecord>;attempts:AttemptRecord[];dailySessions:DailySessionRecord[];isLoggedIn:boolean;onOpenLesson:(index:number)=>void;onOpenGame:()=>void;onOpenAccount:()=>void;lang:'en'|'vi'}){
  const [showHelp,setShowHelp]=useState(false);
- const stats=useMemo(()=>gameStats(progress,attempts),[progress,attempts]);
+ const stats=useMemo(()=>gameStats(progress,attempts,dailySessions),[progress,attempts,dailySessions]);
+ const today=vietnamDay(new Date());
+ const streak=useMemo(()=>calculateStreak(dailySessions.flatMap(s=>s.completedAt?.toDate?.()?[vietnamDay(s.completedAt.toDate())]:[]),today),[dailySessions,today]);
  const vi=lang==='vi';const attempted=stats.tackled.length;const next=lessonIds.findIndex(id=>!progress[id]);const current=next<0?6:next;
  const min=stats.level===1?0:stats.level===2?70:stats.level===3?180:300;
  const max=stats.level===4?350:stats.level===3?300:stats.level===2?180:70;
@@ -53,10 +57,18 @@ export function QuestWorld({progress,attempts,isLoggedIn,onOpenLesson,onOpenAcco
    </div>
   </div>
  </section>
+ <section className="rounded-3xl border-2 border-orange-100 bg-gradient-to-br from-orange-50 via-white to-amber-50 p-5 shadow-sm md:p-7">
+  <div className="flex flex-wrap items-center justify-between gap-4">
+   <div className="flex items-center gap-4"><span className="grid h-16 w-16 place-items-center rounded-[1.3rem] bg-orange-100 text-orange-600"><Flame size={38}/></span><div><p className="text-xs font-bold uppercase tracking-widest text-orange-600">{vi?'Lửa học tập mỗi ngày':'Daily Learning Streak'}</p><h3 className="text-3xl font-black">{streak.current} {vi?'ngày liên tiếp':'day streak'} 🔥</h3><p className="text-xs text-slate-500">{vi?'Kỷ lục':'Personal best'}: {streak.longest} · {streak.doneToday?(vi?'Hôm nay đã xong ✓':'Today completed ✓'):(vi?'Hôm nay chưa chơi':'Today available')}</p></div></div>
+   <button onClick={onOpenGame} className="inline-flex items-center gap-2 rounded-2xl bg-orange-500 px-6 py-4 font-black text-white shadow-sm hover:bg-orange-600"><Zap size={18}/>{streak.doneToday?(vi?'Chơi thêm':'Practice again'):(vi?'Chơi thử thách hôm nay':'Play today’s game')}<ChevronRight size={17}/></button>
+  </div>
+  <div className="mt-5 grid grid-cols-7 gap-2">{streak.calendar.map(day=><div key={day} className="text-center"><p className="mb-2 text-xs text-slate-500">{new Date(day+'T12:00:00Z').toLocaleDateString(vi?'vi-VN':'en-US',{weekday:'short',timeZone:'UTC'})}</p><div title={day} className={'mx-auto grid h-10 w-10 place-items-center rounded-full text-sm font-black '+(streak.days.has(day)?'bg-orange-500 text-white':day===streak.today?'border-2 border-orange-400 bg-white text-orange-500':'bg-slate-100 text-slate-400')}>{streak.days.has(day)?'🔥':Number(day.slice(-2))}</div></div>)}</div>
+  <p className="mt-3 text-xs text-slate-500">{vi?'Giờ Việt Nam (UTC+7). Một ngày được ghi nhận khi hoàn thành cả ba vòng. Không phạt khi nghỉ.':'Vietnam time (UTC+7). Completing all three rounds counts as a learning day. No penalties for missed days.'}</p>
+ </section>
  {!isLoggedIn&&<div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm"><p className="text-amber-900"><ShieldCheck className="mr-2 inline" size={18}/>{vi?'Chế độ xem thử. Đăng nhập và xác minh email để lưu tiến trình.':'Preview mode. Sign in and verify email to save progress and unlock badges.'}</p><button className="rounded-xl bg-amber-200 px-4 py-2 font-bold text-amber-950" onClick={onOpenAccount}>{vi?'Đăng nhập':'Sign in'}</button></div>}
  <section>
   <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-2xl font-black">{vi?'Bản đồ nhiệm vụ':'Your quest map'}</h3><p className="text-sm text-slate-500">{vi?'Em có thể làm bài theo thứ tự hoặc chọn bài muốn học.':'Choose your own path or follow the suggested lesson order.'}</p></div><button onClick={()=>setShowHelp(!showHelp)} className="inline-flex items-center gap-1 rounded-xl border bg-white px-3 py-2 text-sm font-bold"><CircleHelp size={16}/>{vi?'Cách tính XP':'How XP works'}</button></div>
-  {showHelp&&<div className="mt-3 rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-sm"><p className="font-bold">{vi?'Điểm thưởng học tập':'Mastery-based points'}</p><p className="mt-1">{vi?'Mỗi bài đã làm nhận 20 XP + 10 XP cho mỗi câu đúng trong điểm cao nhất của bài. Làm lại giúp cải thiện kỹ năng nhưng không cộng điểm trùng lặp.':'Each tried lesson earns 20 XP plus 10 XP for each correct answer in its best short quiz. Retakes improve your best score, without farming points.'}</p><p className="mt-2 text-xs text-slate-600">{vi?'XP chỉ thể hiện hoạt động luyện tập, không phải chứng nhận năng lực ACTFL.':'XP is a practice indicator, not an ACTFL proficiency rating or credential.'}</p></div>}
+  {showHelp&&<div className="mt-3 rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-sm"><p className="font-bold">{vi?'Điểm thưởng học tập':'Mastery-based points'}</p><p className="mt-1">{vi?'Mỗi bài đã làm nhận 20 XP + 10 XP cho mỗi câu đúng theo điểm cao nhất. Mỗi ngày hoàn thành game được thêm 10 XP. Chơi lại không cộng điểm trùng lặp.':'Each tried lesson earns 20 XP plus 10 XP per correct answer on its best short quiz. Each distinct daily-game completion adds 10 XP. Retakes do not farm XP.'}</p><p className="mt-2 text-xs text-slate-600">{vi?'XP chỉ thể hiện hoạt động luyện tập, không phải chứng nhận năng lực ACTFL.':'XP is a practice indicator, not an ACTFL proficiency rating or credential.'}</p></div>}
   <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{missions.map((m,i)=>{const rec=progress[lessonIds[i]];const state=!rec?'new':rec.bestScore===3?'perfect':'inprogress';return <button key={m.title} onClick={()=>onOpenLesson(i)} className="group relative flex min-h-[185px] flex-col items-start rounded-3xl border-2 border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-violet-400 hover:shadow-md"><span className="absolute right-4 top-4 rounded-full bg-indigo-50 px-3 py-1 text-xs font-black text-indigo-700">{i+1}/7</span><span className="text-4xl" aria-hidden="true">{m.icon}</span><h4 className="mt-3 text-lg font-black">{vi?m.vi:m.title}</h4><span className="mt-1 text-xs font-semibold text-violet-700">{vi?m.modeVi:m.mode}</span><p className="mt-2 flex-1 text-xs leading-relaxed text-slate-500">{vi?m.focusVi:m.focus}</p><div className="mt-3 flex w-full items-center justify-between border-t pt-3"><span className={'text-xs font-bold '+(state==='perfect'?'text-emerald-700':state==='inprogress'?'text-amber-700':'text-slate-500')}>{state==='perfect'?'⭐ '+(vi?'Đúng 3/3':'3/3 practice'):state==='inprogress'?'✨ '+rec.bestScore+'/3':vi?'Chưa thử':'Not tried'}</span><span className="flex items-center text-xs font-bold text-indigo-700">{state==='new'?(vi?'Khám phá':'Explore'):(vi?'Luyện tiếp':'Practice again')}<ChevronRight size={15}/></span></div></button>})}</div>
  </section>
  <section className="rounded-3xl border border-slate-200 bg-white p-5 md:p-7"><h3 className="flex items-center gap-2 text-xl font-black"><Medal className="text-amber-500"/>{vi?'Bộ sưu tập huy hiệu':'My achievement shelf'}</h3><p className="mt-1 text-sm text-slate-500">{vi?'Huy hiệu chỉ hiển thị cá nhân, không có bảng xếp hạng gây áp lực.':'Private milestones — no public leaderboards or penalty for taking a break.'}</p><div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">{stats.badges.map(b=><div key={b.id} className={'rounded-2xl border p-4 text-center '+(b.earned?'border-amber-200 bg-amber-50':'border-slate-200 bg-slate-50 opacity-65')}><span className="text-3xl" aria-label={b.earned?'Unlocked':'Locked'}>{b.earned?b.emoji:'🔒'}</span><p className="mt-2 text-sm font-black">{vi?b.vi:b.name}</p><p className="mt-1 text-xs text-slate-500">{vi?b.whyVi:b.why}</p></div>)}</div></section>
