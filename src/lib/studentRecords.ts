@@ -1,6 +1,6 @@
 import {useEffect,useState} from 'react';
 import type {User} from 'firebase/auth';
-import {collection,doc,getDoc,getDocs,orderBy,query,serverTimestamp,setDoc,writeBatch,type Timestamp} from 'firebase/firestore';
+import {collection,doc,getDoc,getDocs,orderBy,query,serverTimestamp,setDoc,runTransaction,type Timestamp} from 'firebase/firestore';
 import {db} from './firebase';
 
 export const lessonIds=['getting-started','closer-look-1','closer-look-2','communication','skills-1','skills-2','looking-back-project'] as const;
@@ -44,12 +44,15 @@ export function useStudentRecords(user:User|null,authRevision:number):StudentRec
  async function saveAttempt(lessonId:string,answers:number[],score:number,total:number){
   const {database,uid}=ensure();if(!lessonIds.includes(lessonId as typeof lessonIds[number])||answers.length!==3||total!==3)throw new Error('Invalid exercise');
   const ref=doc(collection(database,'users',uid,'attempts'));
-  const previous=progress[lessonId];
-  const next:ProgressRecord={lessonId,latestScore:score,bestScore:Math.max(previous?.bestScore??0,score),total,attempts:(previous?.attempts??0)+1};
-  const batch=writeBatch(database);
-  batch.set(ref,{lessonId,answers,score,total,createdAt:serverTimestamp()});
-  batch.set(doc(database,'users',uid,'progress',lessonId),{...next,updatedAt:serverTimestamp()});
-  await batch.commit();
+  const progressRef=doc(database,'users',uid,'progress',lessonId);
+  const next=await runTransaction(database,async transaction=>{
+   const snapshot=await transaction.get(progressRef);
+   const previous=snapshot.exists()?snapshot.data() as ProgressRecord:null;
+   const updated:ProgressRecord={lessonId,latestScore:score,bestScore:Math.max(previous?.bestScore??0,score),total,attempts:(previous?.attempts??0)+1};
+   transaction.set(ref,{lessonId,answers,score,total,createdAt:serverTimestamp()});
+   transaction.set(progressRef,{...updated,updatedAt:serverTimestamp()});
+   return updated;
+  });
   setProgress(old=>({...old,[lessonId]:next}));
   setAttempts(old=>[{id:ref.id,lessonId,answers,score,total,createdAt:null},...old]);
   setStatus('Attempt saved to your account / Đã lưu bài vào tài khoản');
