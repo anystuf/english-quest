@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:streak && tsc -b && vite build",
+    "build": "npm run test:streak && npm run test:coach && tsc -b && vite build",
     "preview": "vite preview",
-    "test:streak": "node --experimental-strip-types --test tests/streak.test.mjs"
+    "test:streak": "node --experimental-strip-types --test tests/streak.test.mjs",
+    "test:coach": "node --experimental-strip-types --test tests/coach.test.mjs"
   },
   "dependencies": {
     "firebase": "^11.10.0",
