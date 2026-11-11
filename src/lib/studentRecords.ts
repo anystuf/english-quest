@@ -32,15 +32,15 @@ export function useStudentRecords(user:User|null,authRevision:number):StudentRec
       getDocs(query(collection(database,'users',uid,'attempts'),orderBy('createdAt','desc'))),
       getDoc(doc(database,'users',uid,'notes','unit4')),
       getDocs(collection(database,'users',uid,'work')),
-      getDocs(collection(database,'users',uid,'dailySessions'))
+      getDocs(collection(database,'users',uid,'dailySessions')).catch(()=>null)
     ]);
     if(!active)return;
     const pd:Record<string,ProgressRecord>={};p.docs.forEach(s=>pd[s.id]=s.data() as ProgressRecord);
     const wd:Record<string,string>={};w.docs.forEach(s=>{wd[s.id]=String(s.data().content??'')});
     setProgress(pd);setAttempts(a.docs.map(s=>({...s.data() as Omit<AttemptRecord,'id'>,id:s.id})));
     setNotes(n.exists()?String(n.data().content??''):'');setWork(wd);
-    setDailySessions(sessions.docs.map(s=>({...s.data() as Omit<DailySessionRecord,'day'>,day:s.id})));
-    setStatus('Synced with Firebase / Đã đồng bộ Firebase');
+    setDailySessions(sessions?.docs.map(s=>({...s.data() as Omit<DailySessionRecord,'day'>,day:s.id}))??[]);
+    setStatus(sessions?'Synced with Firebase / Đã đồng bộ Firebase':'Lessons synced; publish new Firestore streak rules / Đã đồng bộ bài học; cần cập nhật rules của streak');
    }catch(e){if(active)setStatus('Cloud read failed / Không đọc được dữ liệu: '+(e instanceof Error?e.message:'Unknown error'))}
    finally{if(active)setLoading(false)}
   };void load();return()=>{active=false};
