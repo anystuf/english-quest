@@ -1,5 +1,5 @@
 import {useState,type FormEvent} from 'react';
-import {BookOpen,MessageCircle,Mic,Send,ShieldCheck,Volume2,VolumeX,X} from 'lucide-react';
+import {BookOpen,Mic,Send,ShieldCheck,Volume2,VolumeX,X} from 'lucide-react';
 import {recognizeEnglish,soundEffect,speakUS,speechRecognitionAvailable} from '../lib/sensory';
 
 type Msg={role:'coach'|'learner';en:string;vi?:string};
