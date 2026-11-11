@@ -1,5 +1,5 @@
 import {useMemo,useState} from 'react';
-import {ArrowLeft,ArrowRight,CheckCircle2,Flame,Heart,RotateCcw,ShieldCheck, Sparkles,Volume2,Zap} from 'lucide-react';
+import {ArrowLeft,ArrowRight,Flame,Heart,RotateCcw,ShieldCheck,Sparkles,Zap} from 'lucide-react';
 import type {DailySessionRecord} from '../lib/studentRecords';
 import {calculateStreak,vietnamDay} from '../lib/dailyStreak';
 
