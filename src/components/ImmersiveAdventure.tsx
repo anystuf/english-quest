@@ -1,5 +1,5 @@
 import {useMemo,useState} from 'react';
-import {ArrowLeft,ArrowRight,CheckCircle2,Flame,Headphones,MessageCircle,Mic,MicOff,Music2,RotateCcw,ShieldCheck,Sparkles,Volume2,VolumeX,Zap} from 'lucide-react';
+import {ArrowLeft,ArrowRight,CheckCircle2,Flame,Headphones,MessageCircle,Mic,MicOff,RotateCcw,ShieldCheck,Volume2,VolumeX,Zap} from 'lucide-react';
 import type {DailySessionRecord} from '../lib/studentRecords';
 import {calculateStreak,vietnamDay} from '../lib/dailyStreak';
 import {recognizeEnglish,soundEffect,speakConversation,speakUS,speechRecognitionAvailable} from '../lib/sensory';
@@ -82,7 +82,7 @@ export function ImmersiveAdventure({lang,verified,sessions,onFinish,onAccount,on
  const [saveError,setSaveError]=useState('');
  const [saving,setSaving]=useState(false);
  const quizCorrect=dailyQuiz.filter((q,i)=>quizAnswers[i]===q.right).length;
- const stage=Math.max(0,phases.indexOf(phase)+1);
+ const stage=phase==='win'?phases.length:Math.max(0,phases.indexOf(phase)+1);
  const correctChoice=(good:boolean)=>soundEffect(good?'success':'try',sound);
  const start=()=>{setPhase('explore');soundEffect('tap',sound);void speakUS('Welcome to the school art festival. Let’s explore together!',sound)};
  const visit=(index:number)=>{setActiveHotspot(index);setVisited(a=>a.includes(index)?a:[...a,index]);correctChoice(true);void speakUS(hotspots[index].description,sound)};
