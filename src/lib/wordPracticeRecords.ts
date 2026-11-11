@@ -10,7 +10,7 @@ export function useWordPractice(user:User|null,authRevision:number){
  const [loading,setLoading]=useState(false);
  const [status,setStatus]=useState('Practice locally / Luyện tập thử');
  useEffect(()=>{
-  let mounted=true;setRecords({});
+  let mounted=true;setRecords({});setLoading(false);
   if(!db||!user?.emailVerified){setStatus('Sign in and verify email to save / Đăng nhập và xác minh email để lưu');return}
   const database=db,uid=user.uid;
   setLoading(true);
