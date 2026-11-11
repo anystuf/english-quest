@@ -1,6 +1,6 @@
-import {useEffect,useMemo,useState} from 'react';
+import {useEffect,useState} from 'react';
 import type {User} from 'firebase/auth';
-import {ArrowLeft,ArrowRight,BookOpen,Check,CheckCircle2,ChevronRight,ClipboardCheck,ExternalLink,Gamepad2,Headphones,Info,Languages,LockKeyhole,Mic,NotebookPen,RotateCcw,Send,Volume2} from 'lucide-react';
+import {ArrowLeft,ArrowRight,BookOpen,CheckCircle2,ChevronRight,ClipboardCheck,ExternalLink,Gamepad2,Headphones,LockKeyhole,Mic,NotebookPen,RotateCcw,Send} from 'lucide-react';
 import {textbookPaths,type TextbookActivity,type Localized} from '../data/textbookCurriculum';
 import {lessonIds} from '../lib/studentRecords';
 import {useCurriculumRecords,type CurriculumEntry} from '../lib/curriculumRecords';
