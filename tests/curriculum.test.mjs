@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {textbookPaths,curriculumActivityIds} from '../src/data/textbookCurriculum.ts';
+const expected=[5,5,5,5,5,5,8];
+test('Unit 4 has the seven required SGK sections',()=>{assert.deepEqual(textbookPaths.map(p=>p.lesson),['Getting Started','A Closer Look 1','A Closer Look 2','Communication','Skills 1','Skills 2','Looking Back & Project']);});
+test('each lesson maps the expected number of textbook activity blocks',()=>{assert.deepEqual(textbookPaths.map(p=>p.tasks.length),expected);assert.equal(curriculumActivityIds.length,38)});
+test('activity IDs are unique and safe for Firestore',()=>{assert.equal(new Set(curriculumActivityIds).size,38);for(const id of curriculumActivityIds)assert.match(id,/^u4-[a-z0-9-]+$/)});
+test('all activities have a page, a reference, and original bilingual instructions',()=>{for(const p of textbookPaths){assert.ok(p.page);assert.ok(p.url.includes('unit-4-music-and-arts'));for(const t of p.tasks){for(const x of [t.title,t.source,t.prompt]){assert.ok(x.en.length>5);assert.ok(x.vi.length>5)}}}});
+test('automated questions have valid answer keys',()=>{for(const task of textbookPaths.flatMap(p=>p.tasks)){if(task.kind==='choice'||task.kind==='listen'){assert.ok(task.options?.length>=3);assert.ok(Number.isInteger(task.correct));assert.ok(task.correct>=0&&task.correct<task.options.length)}if(task.kind==='fill')assert.ok(task.accepted?.length);if(task.kind==='write')assert.ok(task.sample?.en.length)}});
+test('all seven lessons contain at least one original interactive assessment',()=>{assert.ok(textbookPaths.every(p=>p.tasks.some(t=>t.kind==='choice'||t.kind==='fill'||t.kind==='listen')))});
+test('skills 1 includes a water puppetry email with its own meaning checks',()=>{const p=textbookPaths[4];assert.ok(p.tasks.some(t=>t.context?.en.includes('puppeteers')));assert.ok(p.tasks.some(t=>t.kind==='write'))});
+test('skills 2 includes an original listening script and an invitation writing prompt',()=>{const p=textbookPaths[5];assert.ok(p.tasks.filter(t=>t.audio).length>=2);assert.ok(p.tasks.some(t=>t.kind==='write'&&t.prompt.en.includes('60–80')))});
+test('unit ends with a music show project and a reflection',()=>{const p=textbookPaths[6];assert.ok(p.tasks.some(t=>t.exercise==='Project 3'));assert.ok(p.tasks.some(t=>t.exercise==='Now I Can'))});
+test('open-ended work is never marked with an automatic correct answer',()=>{for(const t of textbookPaths.flatMap(p=>p.tasks).filter(t=>t.kind==='write'))assert.equal(t.correct,undefined)});
