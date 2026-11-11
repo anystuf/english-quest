@@ -77,6 +77,31 @@ service cloud.firestore {
     && request.resource.data.updatedAt==request.time;
    allow delete: if false;
   }
+  // Original textbook companion tasks; answers are client-computed, not certified grades.
+  match /users/{uid}/curriculum/{activityId}{
+   allow read: if verifiedOwner(uid);
+   allow create,update: if verifiedOwner(uid)
+    && activityId.matches('^u4-[a-z0-9-]{1,70}{allow read,write: if false;}
+ }
+}
+)
+    && request.resource.data.keys().hasOnly(['activityId','lessonId','response','mode','correct','bestCorrect','attempts','updatedAt'])
+    && request.resource.data.activityId==activityId
+    && validLesson(request.resource.data.lessonId)
+    && request.resource.data.response is string
+    && request.resource.data.response.size()>0
+    && request.resource.data.response.size()<=2400
+    && request.resource.data.mode in ['auto','submission']
+    && request.resource.data.correct is bool
+    && request.resource.data.bestCorrect is bool
+    && (!request.resource.data.correct || request.resource.data.bestCorrect)
+    && (request.resource.data.mode=='auto'||request.resource.data.correct==false)
+    && request.resource.data.attempts is int
+    && request.resource.data.attempts>=1
+    && request.resource.data.attempts<=10000
+    && request.resource.data.updatedAt==request.time;
+   allow delete: if false;
+  }
   match /{document=**}{allow read,write: if false;}
  }
 }
