@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {coachAnswer} from '../src/lib/coachLogic.ts';
+test('coach explains comparisons',()=>{assert.match(coachAnswer('Explain different from').en,/different from/);});
+test('coach teaches /sh/ and /zh/',()=>{const r=coachAnswer('How do I pronounce show and vision?');assert.match(r.en,/\/ʃ\//);assert.match(r.en,/\/ʒ\//);});
+test('coach models invitations',()=>{assert.match(coachAnswer('Help me write an invitation').en,/school art show/);});
+test('coach offers a real-life roleplay',()=>{assert.match(coachAnswer('Let us practice a conversation').en,/art fair/);});
+test('coach asks for reasons',()=>{assert.match(coachAnswer('I prefer paintings').en,/WHY/);});
+test('coach discourages sharing private data',()=>{assert.match(coachAnswer('Can I send you my home address?').en,/share personal details/);});
+test('coach stays within Unit 4',()=>{assert.match(coachAnswer('Tell me about satellites').en,/guided Unit 4 coach/);});
+test('coach handles long inputs',()=>{assert.match(coachAnswer('a'.repeat(600)).en,/short question/);});
