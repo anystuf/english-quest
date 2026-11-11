@@ -1,18 +1,51 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{userId}/progress/{lessonId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow create, update: if request.auth != null && request.auth.uid == userId
-        && request.resource.data.keys().hasOnly(['completed','correct','total'])
-        && request.resource.data.completed is bool
-        && request.resource.data.correct is int
-        && request.resource.data.total is int
-        && request.resource.data.correct >= 0
-        && request.resource.data.total > 0
-        && request.resource.data.correct <= request.resource.data.total;
-      allow delete: if false;
-    }
-    match /{document=**} { allow read, write: if false; }
+ match /databases/{database}/documents {
+  function owner(uid){return request.auth!=null && request.auth.uid==uid;}
+  function verifiedOwner(uid){return owner(uid) && request.auth.token.email_verified==true;}
+  function validLesson(id){return id in ['getting-started','closer-look-1','closer-look-2','communication','skills-1','skills-2','looking-back-project'];}
+  match /users/{uid}/progress/{lessonId}{
+   allow read: if verifiedOwner(uid);
+   allow create,update: if verifiedOwner(uid) && validLesson(lessonId)
+    && request.resource.data.keys().hasOnly(['lessonId','latestScore','bestScore','total','attempts','updatedAt'])
+    && request.resource.data.lessonId==lessonId
+    && request.resource.data.latestScore is int && request.resource.data.latestScore>=0 && request.resource.data.latestScore<=3
+    && request.resource.data.bestScore is int && request.resource.data.bestScore>=0 && request.resource.data.bestScore<=3
+    && request.resource.data.bestScore>=request.resource.data.latestScore
+    && request.resource.data.total==3 && request.resource.data.attempts is int
+    && request.resource.data.attempts>=1 && request.resource.data.attempts<=10000
+    && request.resource.data.updatedAt==request.time;
+   allow delete: if false;
   }
+  match /users/{uid}/attempts/{attemptId}{
+   allow read: if verifiedOwner(uid);
+   allow create: if verifiedOwner(uid)
+    && request.resource.data.keys().hasOnly(['lessonId','answers','score','total','createdAt'])
+    && validLesson(request.resource.data.lessonId)
+    && request.resource.data.answers is list && request.resource.data.answers.size()==3
+    && request.resource.data.answers[0] is int && request.resource.data.answers[0]>=0 && request.resource.data.answers[0]<=2
+    && request.resource.data.answers[1] is int && request.resource.data.answers[1]>=0 && request.resource.data.answers[1]<=2
+    && request.resource.data.answers[2] is int && request.resource.data.answers[2]>=0 && request.resource.data.answers[2]<=2
+    && request.resource.data.score is int && request.resource.data.score>=0 && request.resource.data.score<=3
+    && request.resource.data.total==3 && request.resource.data.createdAt==request.time;
+   allow update,delete: if false;
+  }
+  match /users/{uid}/notes/{noteId}{
+   allow read: if verifiedOwner(uid) && noteId=='unit4';
+   allow create,update: if verifiedOwner(uid) && noteId=='unit4'
+    && request.resource.data.keys().hasOnly(['content','updatedAt'])
+    && request.resource.data.content is string && request.resource.data.content.size()<=10000
+    && request.resource.data.updatedAt==request.time;
+   allow delete: if false;
+  }
+  match /users/{uid}/work/{lessonId}{
+   allow read: if verifiedOwner(uid) && validLesson(lessonId);
+   allow create,update: if verifiedOwner(uid) && validLesson(lessonId)
+    && request.resource.data.keys().hasOnly(['content','updatedAt'])
+    && request.resource.data.content is string && request.resource.data.content.size()<=5000
+    && request.resource.data.updatedAt==request.time;
+   allow delete: if false;
+  }
+  match /{document=**}{allow read,write: if false;}
+ }
 }
