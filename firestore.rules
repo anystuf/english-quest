@@ -46,6 +46,23 @@ service cloud.firestore {
     && request.resource.data.updatedAt==request.time;
    allow delete: if false;
   }
+  // Each day is an immutable, owner-only check-in. Server timestamp determines actual streak day.
+  // The game result is self-reported by the browser; do not use it for high-stakes rewards.
+  match /users/{uid}/dailySessions/{dayId} {
+   allow read: if verifiedOwner(uid);
+   allow create: if verifiedOwner(uid)
+    && dayId.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}{allow read,write: if false;}
+ }
+}
+)
+    && request.resource.data.keys().hasOnly(['mode','correct','total','matched','sentenceSolved','completedAt'])
+    && request.resource.data.mode=='daily-game'
+    && request.resource.data.correct is int && request.resource.data.correct>=2 && request.resource.data.correct<=3
+    && request.resource.data.total==3 && request.resource.data.matched==4
+    && request.resource.data.sentenceSolved==true
+    && request.resource.data.completedAt==request.time;
+   allow update,delete: if false;
+  }
   match /{document=**}{allow read,write: if false;}
  }
 }
