@@ -46,15 +46,10 @@ service cloud.firestore {
     && request.resource.data.updatedAt==request.time;
    allow delete: if false;
   }
-  // Each day is an immutable, owner-only check-in. Server timestamp determines actual streak day.
-  // The game result is self-reported by the browser; do not use it for high-stakes rewards.
-  match /users/{uid}/dailySessions/{dayId} {
+  match /users/{uid}/dailySessions/{dayId}{
    allow read: if verifiedOwner(uid);
    allow create: if verifiedOwner(uid)
-    && dayId.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}{allow read,write: if false;}
- }
-}
-)
+    && dayId.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
     && request.resource.data.keys().hasOnly(['mode','correct','total','matched','sentenceSolved','completedAt'])
     && request.resource.data.mode=='daily-game'
     && request.resource.data.correct is int && request.resource.data.correct>=2 && request.resource.data.correct<=3
@@ -62,6 +57,25 @@ service cloud.firestore {
     && request.resource.data.sentenceSolved==true
     && request.resource.data.completedAt==request.time;
    allow update,delete: if false;
+  }
+  // Word-recognition feedback is formative, client-scored and not a phonetic proficiency grade.
+  // Only aggregate scores are stored. No audio, raw transcript, or microphone recording.
+  match /users/{uid}/pronunciation/{wordId}{
+   allow read: if verifiedOwner(uid);
+   allow create,update: if verifiedOwner(uid)
+    && wordId.matches('^[a-z0-9-]{1,80}$')
+    && request.resource.data.keys().hasOnly(['wordId','bestScore','latestScore','attempts','updatedAt','method'])
+    && request.resource.data.wordId==wordId
+    && request.resource.data.method=='browser-word-recognition'
+    && request.resource.data.bestScore is int
+    && request.resource.data.bestScore>=0 && request.resource.data.bestScore<=100
+    && request.resource.data.latestScore is int
+    && request.resource.data.latestScore>=0 && request.resource.data.latestScore<=100
+    && request.resource.data.bestScore>=request.resource.data.latestScore
+    && request.resource.data.attempts is int
+    && request.resource.data.attempts>=1 && request.resource.data.attempts<=5000
+    && request.resource.data.updatedAt==request.time;
+   allow delete: if false;
   }
   match /{document=**}{allow read,write: if false;}
  }
