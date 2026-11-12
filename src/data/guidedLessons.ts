@@ -25,42 +25,42 @@ export const guidedTeachingScripts:GuidedTeachingScript[]=[
       {
         "minutes": 5,
         "phase": "Khởi động",
-        "teacher": "Hỏi: 'Do you like music?' và 'Do you like painting?' Cho em chọn tranh/biểu tượng 🎹 🎨 📷. Chấp nhận em trả lời ngắn, rồi làm mẫu 'I like music.'",
+        "teacher": "Người dạy hỏi: 'Em thích nghe nhạc, vẽ hay chụp ảnh?'. Cho em chỉ biểu tượng 🎹 🎨 📷. Nói mẫu 'I like music.' rồi hỏi 'What do you like?'. Chỉ sửa 1 lỗi quan trọng, không ngắt lời liên tục.",
         "student": "Chỉ tranh phù hợp và trả lời ít nhất một câu đầy đủ.",
         "check": "Em nói được 'I like ...' mà không cần đọc lại lời giáo viên."
       },
       {
         "minutes": 8,
         "phase": "Nghe/đọc hiểu",
-        "teacher": "Mở SGK trang 40 và chỉ hội thoại Trang–Nick; cho em dự đoán hai bạn đang nói về chủ đề gì. Em đọc lượt 1 để xác định ý chính; lượt 2 khoanh những hoạt động Nick và Trang nhắc tới. Nếu không có audio chính thức, người dạy đọc chậm theo sách; đừng gọi TTS của ứng dụng là audio SGK.",
+        "teacher": "Chỉ trang 40: 'Nhìn hai bạn Trang và Nick. Em đoán họ đang bàn điều gì?'. Cho em nghe bài chính thức nếu gia đình có bản audio; nếu không, đọc diễn cảm 2 lượt từ PDF cá nhân. Lượt 1 hỏi ý chính; lượt 2 yêu cầu gạch chân các hoạt động nghệ thuật được nhắc đến.",
         "student": "Nêu chủ đề chung; nhận ra nhạc, hội họa và chụp ảnh; giải thích bằng tiếng Việt trước.",
         "check": "Trả lời được: câu chuyện nói về âm nhạc và nghệ thuật."
       },
       {
         "minutes": 10,
         "phase": "Học từ vựng có ngữ cảnh",
-        "teacher": "Dẫn vào các nhiệm vụ 2–4 ở trang 41: phân biệt chủ đề chính, hoàn thành từ/cụm từ, nhận diện đồ vật/tranh. Với mỗi từ: cho xem ảnh → hỏi nghĩa → đọc từ → đặt một câu mới.",
+        "teacher": "Chuyển sang trang 41: 'Hãy tìm nhóm từ liên quan nghệ thuật.' Minh họa art gallery bằng phòng tranh; paintbrush bằng cọ; taking photos bằng động tác chụp ảnh. Người dạy đọc mẫu một lần rồi em tự nói 2 câu mới với từ vừa học.",
         "student": "Đặt 2 câu, chẳng hạn 'I take photos.' và 'She paints pictures.'",
         "check": "Nhận diện đúng ít nhất 4 trong 6 từ, không chỉ đọc chép."
       },
       {
         "minutes": 10,
         "phase": "Luyện cùng",
-        "teacher": "Hỏi luân phiên 'What do you like?' và 'Do you like music or art?'. Làm mẫu cách trả lời rồi giảm gợi ý. Chuyển sang bài luyện trực tiếp của Getting Started trong English Quest.",
+        "teacher": "Anh/chị đóng vai bạn A: 'Do you prefer music or painting?'. Em đáp 'I prefer ... because ...' (nếu chưa quen because, cho dùng 'I like ...'). Đổi vai. Sau đó cho em làm hoạt động Getting Started tương ứng trên English Quest.",
         "student": "Nói theo cặp và làm các hoạt động luyện tập 1–4 trên web.",
         "check": "Trả lời đầy đủ câu chủ ngữ + động từ + tân ngữ."
       },
       {
         "minutes": 7,
         "phase": "Tự vận dụng",
-        "teacher": "Dựa vào bài khảo sát sở thích ở trang 41, yêu cầu em tạo ba câu KHÔNG nhìn mẫu: 1 điều thích, 1 điều không thích, 1 điều muốn thử.",
+        "teacher": "Yêu cầu: 'Không nhìn ví dụ, hãy nói 3 câu: một điều em thích, một điều em không thích, một điều em muốn thử.' Đợi tối đa 10 giây rồi mới gợi ý 'I like ... / I don't like ... / I want to ...'.",
         "student": "Tự nói ba câu bằng tiếng Anh.",
         "check": "Ít nhất 2/3 câu rõ nghĩa, không phụ thuộc người nhắc từng từ."
       },
       {
         "minutes": 5,
         "phase": "Kiểm tra ra lớp",
-        "teacher": "Hỏi từ mới qua tranh và yêu cầu một câu mới về sở thích nghệ thuật. Ghi lại một lỗi cần cải thiện ngày mai.",
+        "teacher": "Kiểm tra nhanh: 'What does art gallery mean?' 'Name an art activity.' 'Tell me one thing you like.' Đánh dấu câu nào em nói độc lập và chốt một điểm cần ôn buổi sau.",
         "student": "Nói 1 câu mới và giải thích 2 từ đã học.",
         "check": "Nhớ 2 từ và tự tạo câu mới."
       }
@@ -98,42 +98,42 @@ export const guidedTeachingScripts:GuidedTeachingScript[]=[
       {
         "minutes": 5,
         "phase": "Ôn đầu giờ",
-        "teacher": "Cho xem tranh và hỏi 3 từ hôm trước. Yêu cầu em nói 'I like ...' một lần trước khi cho xem gợi ý.",
+        "teacher": "Nhắc lại: 'Hôm trước em học những từ nào về nghệ thuật?'. Cho em chỉ 3 biểu tượng và nói 1 câu 'I like ...'. Tránh đọc đáp án trước.",
         "student": "Nhắc lại 3 từ và tự đặt câu.",
         "check": "Ít nhất 2 từ nhớ độc lập."
       },
       {
         "minutes": 10,
         "phase": "Nhận diện từ: người hay nơi?",
-        "teacher": "Mở SGK trang 42, hoạt động 1. Vẽ 2 cột PEOPLE/PLACES. Nói nghĩa trước, cho em phân loại composer, painter, artist, musician, concert hall, art gallery, puppet theatre.",
+        "teacher": "Chỉ bảng ở trang 42, vẽ PEOPLE / PLACES. Hỏi: 'Composer là người hay nơi?' Nêu lý do. Lần lượt dẫn em tự xếp artist, painter, musician, concert hall, art gallery, puppet theatre; mỗi câu đúng mới mở nghĩa tiếng Việt.",
         "student": "Phân loại từ vào 2 cột; giải thích vì sao một từ là người hay nơi.",
         "check": "Phân loại ít nhất 5/7 mục đúng."
       },
       {
         "minutes": 8,
         "phase": "Ghép động từ với danh từ",
-        "teacher": "Dựa vào hoạt động 2–3 của SGK; làm mẫu 'compose music', 'paint a portrait', 'take a photo', 'play the guitar'. So sánh với tiếng Việt và nêu lỗi ghép sai thường gặp.",
+        "teacher": "Viết bảng 4 động từ compose, paint, take, play và 4 cụm music, a portrait, a photo, the guitar. Hỏi em ghép tự nhiên, rồi nói rõ 'take a photo' không dùng make a photo trong ngữ cảnh này. Cho tự đặt 2 câu.",
         "student": "Ghép 4 cặp và đặt 2 câu với cụm từ.",
         "check": "Nói được 3 cụm từ đúng và tạo 1 câu mới."
       },
       {
         "minutes": 10,
         "phase": "Luyện phát âm /ʃ/ và /ʒ/",
-        "teacher": "Dựa vào hoạt động 4–5 của SGK. Phát âm chậm cặp 'show' / 'vision'; với /ʃ/ không rung cổ, với /ʒ/ có rung. Cho nghe/nhắc lại 'musician', 'television', 'decision', 'share', rồi chọn nhóm âm.",
+        "teacher": "Đặt tay nhẹ lên cổ, phát âm 'show' (/ʃ/ — không rung) và 'vision' (/ʒ/ — rung). Cho em cảm nhận, nghe lại 4 từ show, share, television, decision rồi phân loại. Chuyển sang bài 4–5 trang 42 và cho em tự đọc một câu mới.",
         "student": "Nghe, phân biệt 4 từ và đọc 2 câu ngắn.",
         "check": "Phân loại đúng ít nhất 3/4 ví dụ trong bài luyện, không chấm âm chính xác tuyệt đối chỉ bằng công cụ nhận diện từ."
       },
       {
         "minutes": 7,
         "phase": "Tự luyện",
-        "teacher": "Tắt mẫu, yêu cầu dùng một từ chỉ người, một từ chỉ địa điểm, một collocation và một từ chứa /ʒ/ trong câu/cụm từ mới.",
+        "teacher": "Cất danh sách từ. Hỏi: 'Hãy nói một người trong âm nhạc, một nơi xem nghệ thuật, một hoạt động và đọc một từ có /ʒ/.' Chỉ gợi ý 'Who? Where? Do what?' khi em ngập ngừng.",
         "student": "Viết hoặc nói 3 câu, đọc to một từ chứa /ʒ/.",
         "check": "Tạo ≥2 câu đúng nghĩa, không sao chép nguyên mẫu."
       },
       {
         "minutes": 5,
         "phase": "Kiểm tra ra lớp",
-        "teacher": "Đọc một từ thuộc người/địa điểm và hai từ phân biệt âm; yêu cầu em trả lời ngay.",
+        "teacher": "Chốt 4 mục: 'Is an artist a person or a place?', 'Where is a concert?', 'Which sound is in show?', 'Which sound is in vision?'. Cho em trả lời trong 30–60 giây.",
         "student": "Phân nhóm người/nơi và /ʃ/ hay /ʒ/.",
         "check": "Đúng ít nhất 3/4 mục."
       }
@@ -170,42 +170,42 @@ export const guidedTeachingScripts:GuidedTeachingScript[]=[
       {
         "minutes": 5,
         "phase": "Khởi động bằng so sánh",
-        "teacher": "Đặt 2 đồ vật có điểm giống/khác nhau cạnh nhau. Hỏi em 'Same or different?' rồi chuyển sang 'like' và 'different from'.",
+        "teacher": "Đặt hai đồ vật hoặc hai tranh cạnh nhau, hỏi: 'Chúng giống hay khác nhau?'. Anh/chị nói 'This picture is like that picture.' và 'The pictures are different.' rồi để em chọn câu phù hợp.",
         "student": "Nói 1 điểm giống và 1 điểm khác bằng tiếng Việt, sau đó thử bằng tiếng Anh.",
         "check": "Hiểu sự khác nhau giữa giống và khác."
       },
       {
         "minutes": 10,
         "phase": "Làm mẫu like/different from",
-        "teacher": "Mở SGK trang 43, nhắc bảng ngữ pháp. Viết: 'This picture is like that picture.'; 'A guitar is different from a piano.' Hỏi nhận xét về nghĩa và vị trí 'from'.",
+        "teacher": "Mở trang 43, đọc quy tắc trong phần Remember. Viết 'A guitar is different from a piano.' và 'This picture is like that one.' Hỏi: 'Giống dùng từ nào? Khác dùng từ nào? Sau different là từ gì?' Cho em tự sửa 'different with'.",
         "student": "Hoàn thành 3 câu điền like / different from; sửa lỗi 'different with'.",
         "check": "Làm đúng ít nhất 2/3 câu."
       },
       {
         "minutes": 10,
         "phase": "Làm mẫu (not) as ... as",
-        "teacher": "Dùng 2 đồ vật giá tương tự và 2 vật không bằng nhau. Viết 'This bag is as expensive as that one.' và 'My drawing is not as colourful as yours.' Chỉ rõ adjective đứng giữa 2 chữ as.",
+        "teacher": "Viết hai câu ví dụ: 'This bag is as expensive as that bag.' và 'My drawing is not as colourful as yours.' Khoanh 2 chữ as, gạch tính từ ở giữa; để em giải thích khác nhau giữa bằng và không bằng.",
         "student": "Khoanh tính từ; chọn as/as hoặc not as/as theo tình huống.",
         "check": "Viết đúng 'as + adjective + as' trong 2 ví dụ."
       },
       {
         "minutes": 10,
         "phase": "Luyện tập trong sách",
-        "teacher": "Dựa theo hoạt động 1–4 ở trang 43–44: điền cấu trúc, hoàn thiện câu, so sánh History/Science, viết lại câu phủ định tương đương. Giải 1 câu mẫu và để em tự làm các câu còn lại.",
+        "teacher": "Đưa bốn bài luyện ngắn từ nội dung so sánh trên trang 43–44: một câu điền like, một câu different from, một câu as ... as, một câu not as ... as. Giải mẫu một câu, sau đó yêu cầu em làm 3 câu còn lại và nêu quy tắc, không chỉ đoán.",
         "student": "Hoàn thành 4 câu luyện và giải thích tại sao chọn cấu trúc.",
         "check": "Đúng ít nhất 3/4 câu, không nhầm as với than."
       },
       {
         "minutes": 5,
         "phase": "Tự vận dụng",
-        "teacher": "Từ hoạt động so sánh hai tranh trang 44, yêu cầu em tự so sánh hai bức tranh, hai sở thích hoặc hai môn học.",
+        "teacher": "Cho xem hai bức tranh ở trang 44. Hỏi: 'Can you compare them?'. Không đưa sẵn câu mẫu: em tự tạo một câu giống, một câu khác và một câu không bằng. Nếu cần mới đưa khung 'A is ... B'.",
         "student": "Tự tạo 3 câu: giống, khác, không bằng.",
         "check": "Ít nhất 2/3 câu đúng cấu trúc."
       },
       {
         "minutes": 5,
         "phase": "Kiểm tra ra lớp",
-        "teacher": "Đưa 3 câu mới; em chọn đúng like / different from / not as ... as và giải thích ngắn bằng tiếng Việt.",
+        "teacher": "Kiểm tra bằng 3 câu mới về sở thích hoặc môn học. Hỏi 'Why like instead of different from?' và 'Where does the adjective go in as ... as?'. Yêu cầu ít nhất một câu tự sáng tạo.",
         "student": "Điền 3 đáp án, nêu lý do.",
         "check": "Đúng ≥2/3 và đặt được một câu mới."
       }
