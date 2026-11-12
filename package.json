@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:streak && npm run test:coach && npm run test:pronunciation && npm run test:curriculum && tsc -b && vite build",
+    "build": "npm run test:streak && npm run test:coach && npm run test:pronunciation && npm run test:curriculum && npm run test:guided && tsc -b && vite build",
     "preview": "vite preview",
     "test:streak": "node --experimental-strip-types --test tests/streak.test.mjs",
     "test:coach": "node --experimental-strip-types --test tests/coach.test.mjs",
     "test:pronunciation": "node --experimental-strip-types --test tests/pronunciation.test.mjs",
-    "test:curriculum": "node --experimental-strip-types --test tests/curriculum.test.mjs"
+    "test:curriculum": "node --experimental-strip-types --test tests/curriculum.test.mjs",
+    "test:guided": "node --experimental-strip-types --test tests/guidedLessons.test.mjs"
   },
   "dependencies": {
     "firebase": "^11.10.0",
