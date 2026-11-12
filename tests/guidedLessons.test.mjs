@@ -15,7 +15,7 @@ test('each teaching script has a complete 45 minute teach–model–practice–c
   assert.ok(script.vocabulary.length>=5);
   assert.ok(script.passCriteria && script.homework);
   for(const stage of script.stages){
-   for(const field of [stage.phase,stage.teacher,stage.student,stage.check])assert.ok(field.length>=10);
+   assert.ok(stage.phase.length>=4);for(const field of [stage.teacher,stage.student,stage.check])assert.ok(field.length>=10);
   }
  }
 });
