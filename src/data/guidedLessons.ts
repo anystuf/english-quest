@@ -226,4 +226,4 @@ export const foundationCheckpoint=[
   {id:'f4',question:'Rearrange: the / plays / Nick / piano',answer:'nick plays the piano',hint:'Nick is the subject; plays is the main verb.',why:'Nick plays the piano.'},
   {id:'f5',question:'My friends ___ students. (am / is / are)',answer:'are',hint:'My friends = they. Which form of be belongs to they?',why:'My friends are students.'},
 ] as const;
-export function normalizeFoundationAnswer(value:string):string{return value.toLocaleLowerCase('en-US').trim().replace(/[.!?]+$/g,'').replace(/\\s+/g,' ');}
+export function normalizeFoundationAnswer(value:string):string{return value.toLocaleLowerCase('en-US').trim().replace(/[.!?]+$/g,'').replace(/\s+/g,' ');}
