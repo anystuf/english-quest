@@ -96,7 +96,11 @@ try{
      }
      await page.getByRole('button',{name:/Hoàn thành|Finish/}).click();
      await page.getByText(/Hoàn thành một bài học|Mission completed/).waitFor();
+     await page.getByText(/1\/8 bài đã học|1\/8 completed/).waitFor();
      await page.screenshot({path:directory+'/'+v.id+'-finished.png',fullPage:true});
+     await page.getByRole('button',{name:/Bài tiếp theo|Next section/}).click();
+     await page.getByRole('heading',{name:'A Closer Look 1',exact:true}).waitFor();
+     await page.screenshot({path:directory+'/'+v.id+'-next-section.png',fullPage:true});
    }
    await context.close();
  }
