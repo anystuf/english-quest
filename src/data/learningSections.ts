@@ -1,4 +1,4 @@
-import {journeyMissions,type JourneyQuiz} from './learningJourney';
+import {journeyMissions,type JourneyQuiz} from './learningJourney.ts';
 export type UnitNo=1|2|3|4|5;
 export type SectionIndex=0|1|2|3|4|5|6|7;
 export const sectionNames=['Getting Started','A Closer Look 1','A Closer Look 2','Communication','Skills 1','Skills 2','Looking Back','Project'] as const;
