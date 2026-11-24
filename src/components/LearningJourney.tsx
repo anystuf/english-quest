@@ -7,7 +7,12 @@ import {recognizeEnglish,speakUS,speechRecognitionAvailable,soundEffect} from '.
 type Step='watch'|'check'|'shadow'|'complete';
 type Saved={score:number;finishedAt:number;shadowDone:number;reviewAt:number};
 const KEY='eq-journey-v1';
-function load():Record<string,Saved>{try{const data=JSON.parse(localStorage.getItem(KEY)??'{}');return data&&typeof data==='object'&&!Array.isArray(data)?data:{}}catch{return {}}}
+function load():Record<string,Saved>{try{const data=JSON.parse(localStorage.getItem(KEY)??'{}');if(!data||typeof data!=='object'||Array.isArray(data))return {};
+ // Old Journey stored one result per Unit (Getting Started). Preserve it as section 1.
+ const older=[['u5-food','u5-s0'],['u4-arts','u4-s0'],['u3-service','u3-s0'],['u2-health','u2-s0'],['u1-hobbies','u1-s0']];
+ for(const [previous,current] of older){if(data[previous]?.finishedAt&&!data[current])data[current]=data[previous]}
+ return data;
+ }catch{return {}}}
 function nextReview(score:number):number{const days=score===4?REVIEW_DELAY_DAYS[2]:score>=3?REVIEW_DELAY_DAYS[1]:REVIEW_DELAY_DAYS[0];return Date.now()+days*86400000;}
 export function LearningJourney({lang,onTextbook,onPronounce}:{lang:'en'|'vi';onTextbook:(unit:4|5,index:number)=>void;onPronounce:(unit:4|5,index:number)=>void}){
  const vi=lang==='vi';const [id,setId]=useState('u5-food');const mission=useMemo(()=>journeyMissions.find(m=>m.id===id)??journeyMissions[0],[id]);
@@ -24,7 +29,7 @@ export function LearningJourney({lang,onTextbook,onPronounce}:{lang:'en'|'vi';on
  useEffect(()=>{try{localStorage.setItem(KEY,JSON.stringify(records))}catch{}},[records]);
  const score=section.quiz.filter(q=>answers[q.id]===q.answer).length;
  const shadowCount=Object.values(shadowSet).filter(Boolean).length;
- const resetLesson=()=>{setStep('watch');setWatched(false);setAnswers({});setMarked(false);setLine(0);setShadowSet({});setResult(null);setHeard('');setVideoAllowed(false);setVoiceError('');setCoachOpen(false);setCoachQuestion('');setCoachReply('')};
+ const resetLesson=()=>{setStep('watch');setWatched(false);setAnswers({});setMarked(false);setLine(0);setShadowSet({});setResult(null);setHeard('');setVideoAllowed(false);setVoiceError('');setConsent(false);setCoachOpen(false);setCoachQuestion('');setCoachReply('')};
  const choose=(missionId:string)=>{setId(missionId);setSectionIndex(0);resetLesson()};
  const chooseSection=(n:SectionIndex)=>{setSectionIndex(n);resetLesson()};
  const complete=()=>{const entry={score,finishedAt:Date.now(),shadowDone:shadowCount,reviewAt:nextReview(score)};setRecords(prev=>({...prev,[section.id]:entry}));setStep('complete');soundEffect('celebrate')};
