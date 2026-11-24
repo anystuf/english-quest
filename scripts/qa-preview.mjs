@@ -37,14 +37,15 @@ try{
    await page.addScriptTag({path:axePath});
    await inspect(page,v.id,'Learn');
 
-   await page.getByRole('button',{name:/Unit 5/,exact:true}).first().click();
-   await inspect(page,v.id,'Unit5');
-
-   // Verify the matched Unit 5 video, without sending data to YouTube in CI.
+   // Video belongs to the main Learn journey, not to the separate Textbook Path.
+   // Verify the matched Unit 5 video without sending data to YouTube in CI.
    await page.route('**/www.youtube-nocookie.com/**',r=>r.fulfill({status:200,contentType:'text/html',body:'<html><body>Video placeholder for visual QA</body></html>'}));
    await page.getByRole('button',{name:/Mở video|Load video/}).click();
    const videoSrc=await page.locator('iframe[title*="Unit 5"]').getAttribute('src');
    if(!videoSrc?.includes('zUl8CAI2BtI'))errors.push(v.id+': wrong Unit 5 video '+videoSrc);
+
+   await page.getByRole('button',{name:/Unit 5/}).first().click();
+   await inspect(page,v.id,'Unit5');
    await page.getByRole('button',{name:/Học ngay|Learn/}).first().click();
 
    // More menu must close after selection and never cover the lesson content.
