@@ -38,3 +38,21 @@ export const missionById=(id:string)=>journeyMissions.find(m=>m.id===id);
 export const normalizeJourney=(s:string)=>s.toLowerCase().normalize('NFKC').replace(/[’']/g,'').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
 export const REVIEW_DELAY_DAYS=[1,3,7] as const;
 export function recommendedReview(scores:Record<string,number>,unit5Id='u5-food'){const weak=journeyMissions.filter(m=>m.id!==unit5Id&&scores[m.id]!==undefined&&scores[m.id]<3);return weak[0]?.id??unit5Id;}
+
+/** Deterministic on-device tutoring. No network request, storage, or AI generation. */
+export function localTutorReply(question:string,unit:1|2|3|4|5):string {
+ const input=question.trim().slice(0,250);
+ if(!input)return 'Em hãy hỏi một câu ngắn về từ vựng, cấu trúc câu hoặc phát âm nhé.';
+ if(/(?:https?:\/\/|www\.|@|\b\d{7,}\b|địa chỉ nhà|số điện thoại|mật khẩu|password)/i.test(input))return 'Đừng chia sẻ thông tin riêng tư. Mình chỉ hỗ trợ bài tiếng Anh. Em có thể hỏi: “Cách dùng how many?”';
+ const v=input.toLocaleLowerCase('vi-VN');
+ if(/(phát âm|pronoun|đọc từ|speak|nhại|shadow)/i.test(v))return 'Cách luyện: ① Nghe mẫu chậm. ② Chia câu thành hai nhóm từ. ③ Nhại ngay sau mẫu. ④ Đọc lại ở tốc độ tự nhiên. Điểm nhận dạng không phải điểm phát âm chuẩn.';
+ if(/(how much|how many|bao nhiêu)/i.test(v))return 'How many + danh từ đếm được số nhiều (How many eggs?). How much + danh từ không đếm được (How much rice?). Thử đặt một câu hỏi về món ăn của em.';
+ if(/(some|any|một ít|lượng từ)/i.test(v))return 'Some thường dùng trong câu khẳng định: I have some rice. Any thường dùng trong câu hỏi và phủ định: Do you have any milk? Hãy thử thay rice bằng soup.';
+ if(/(like|sở thích|present simple|hiện tại đơn)/i.test(v))return 'I like music, nhưng She likes music. Trong hiện tại đơn, he/she/it thường thêm -s/-es ở động từ. Thử viết một câu về người thân.';
+ if(/(different|as\.?.*as|so sánh)/i.test(v))return 'So sánh: A is different from B (A khác B). A is as nice as B (đẹp như nhau). Hãy chọn hai đồ vật và thử nói một điểm khác.';
+ if(unit===5)return 'Bài Food and Drink: Hãy chọn một món và nói “I would like some rice, please.”. Em chưa biết từ nào? Hỏi mình tên món hoặc cách đặt câu nhé.';
+ if(unit===4)return 'Bài Music and Arts: Dùng “I like painting” để nói sở thích. Em có thể hỏi về /ʃ/, /ʒ/ hoặc “different from”.';
+ if(unit===3)return 'Bài Community Service: Nói “I help clean the park.”. Hãy thử đổi chủ ngữ từ I sang She.';
+ if(unit===2)return 'Bài Healthy Living: Đưa lời khuyên bằng “You should drink water.”. Sau should, dùng động từ nguyên mẫu.';
+ return 'Bài Hobbies: Em có thể nói “I like reading books.”. Hãy thử hỏi “What do you like doing?”';
+}
