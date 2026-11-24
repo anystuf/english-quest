@@ -1,0 +1,39 @@
+name: Visual and Accessibility QA
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  guest-visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install and run code tests
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Install browser QA tooling
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.65.1 axe-core@4.14.1
+          npx playwright install --with-deps chromium
+      - name: Start local Vite and run screenshot/accessibility suite
+        run: |
+          npm run dev -- --host 127.0.0.1 > /tmp/english-quest-vite.log 2>&1 &
+          for i in $(seq 1 50); do
+            if curl --fail --silent http://127.0.0.1:5173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/qa-preview.mjs
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: guest-visual-qa-${{ github.run_id }}
+          path: qa-artifacts/
+          retention-days: 7
