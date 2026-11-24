@@ -33,14 +33,31 @@ try{
    const page=await context.newPage();
    page.on('pageerror',e=>errors.push(v.id+': browser error '+e.message));
    await page.goto(base,{waitUntil:'domcontentloaded'});
-   await page.getByRole('heading',{name:/Học 1 bài|One lesson/}).waitFor();
+   await page.getByRole('heading',{name:/Chọn bài|Choose a lesson/}).waitFor();
    await page.addScriptTag({path:axePath});
    await inspect(page,v.id,'Learn');
+
+   const sectionCards=page.getByTestId('unit-section-card');
+   const count=await sectionCards.count();
+   if(count!==8)errors.push(v.id+': expected 8 section cards, got '+count);
+   const expectedUnit5Videos=['zUl8CAI2BtI','p4iYlraEzd8','ckQvCLv1hlI','xuUDmNv-CII','UdTrA1OReAQ','_x5sP6pbVyI','lhpaieamu0c','-XboSEuNJLw'];
+   if(v.id==='phone-360'||v.id==='desktop-1280'){
+    await page.route('**/www.youtube-nocookie.com/**',r=>r.fulfill({status:200,contentType:'text/html',body:'<html><body>QA video placeholder</body></html>'}));
+    for(const [i,video] of expectedUnit5Videos.entries()){
+     await sectionCards.nth(i).click();
+     await page.getByRole('button',{name:/Mở video|Load video/}).click();
+     const src=await page.getByTestId('unit-section-video').getAttribute('src');
+     if(!src?.includes(video))errors.push(v.id+': wrong video on Unit 5 lesson '+(i+1));
+     await inspect(page,v.id,'Unit5Section'+(i+1));
+     if(i===0||i===7)await page.screenshot({path:directory+'/'+v.id+'-lesson-'+(i+1)+'.png',fullPage:true});
+    }
+    await sectionCards.nth(0).click();
+   }
 
    // Video belongs to the main Learn journey, not to the separate Textbook Path.
    // Verify the matched Unit 5 video without sending data to YouTube in CI.
    await page.route('**/www.youtube-nocookie.com/**',r=>r.fulfill({status:200,contentType:'text/html',body:'<html><body>Video placeholder for visual QA</body></html>'}));
-   await page.getByRole('button',{name:/Mở video|Load video/}).click();
+   if(!(await page.getByTestId('unit-section-video').count()))await page.getByRole('button',{name:/Mở video|Load video/}).click();
    const videoSrc=await page.locator('iframe[title*="Unit 5"]').getAttribute('src');
    if(!videoSrc?.includes('zUl8CAI2BtI'))errors.push(v.id+': wrong Unit 5 video '+videoSrc);
 
@@ -68,9 +85,9 @@ try{
    }
    if(v.id==='phone-390'){
      await page.getByRole('button',{name:/Học ngay|Learn/}).first().click();
-     await page.locator('label').filter({hasText:/xem xong clip|finished watching/i}).locator('input[type=checkbox]').check();
+     await page.locator('label').filter({hasText:/học xong phần này|I studied this section/i}).locator('input[type=checkbox]').check();
      await page.getByRole('button',{name:/Làm thử thách|Start knowledge check/i}).click();
-     for(const [i,n] of [1,0,2,1].entries())await page.locator('fieldset').nth(i).locator('input[type=radio]').nth(n).check();
+     for(const [i,n] of [0,1,2,0].entries())await page.locator('fieldset').nth(i).locator('input[type=radio]').nth(n).check();
      await page.getByRole('button',{name:/Xem kết quả|Check answers/}).click();
      await page.getByRole('button',{name:/Shadowing/}).last().click();
      for(let i=0;i<4;i++){
