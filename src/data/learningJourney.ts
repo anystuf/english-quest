@@ -2,6 +2,15 @@ export type JourneyQuiz={id:string;skill:'meaning'|'use'|'grammar'|'sentence';pr
 export type JourneyMission={id:string;unit:1|2|3|4|5;topic:string;vi:string;target:string;description:string;quiz:JourneyQuiz[];lines:{en:string;vi:string}[]};
 export const PLAYLIST_ID='PLrf9nvyFUs3Q5BjjrZW_KsFE0L4BY_4i0';
 export const START_VIDEO_ID='wH3IDKbP9Yg';
+/** Verified individual Ms Kathy Grade 7 Global Success Getting Started lessons. Do not reuse a video from another Unit. */
+export const lessonVideos={
+  1:{id:'wH3IDKbP9Yg',title:'Unit 1 – Hobbies · Getting Started'},
+  2:{id:'nytLSrBNVQk',title:'Unit 2 – Healthy Living · Getting Started'},
+  3:{id:'IXEQKclDDcs',title:'Unit 3 – Community Service · Getting Started'},
+  4:{id:'R4l5mvN49zo',title:'Unit 4 – Music and Arts · Getting Started'},
+  5:{id:'zUl8CAI2BtI',title:'Unit 5 – Food and Drink · Getting Started'},
+} as const;
+
 export const journeyMissions:JourneyMission[]=[
  {id:'u5-food',unit:5,topic:'Food and Drink',vi:'Đồ ăn & thức uống',target:'Getting Started · trang 50–51',description:'Học tên món ăn, gọi món lịch sự và hỏi bạn thích đồ uống nào.',quiz:[
   {id:'m',skill:'meaning',prompt:'“Spring rolls” có nghĩa là gì?',options:['Nước ép','Nem rán / chả giò','Canh'],answer:1,why:'Spring rolls là nem rán hoặc chả giò.'},
