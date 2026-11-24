@@ -1,5 +1,5 @@
 import {useEffect,useMemo,useState} from 'react';
-import {ArrowLeft,ArrowRight,BookOpen,CheckCircle2,Headphones,Info,Mic,MicOff,MessageCircle,Play,RotateCcw,ShieldCheck,Star,Volume2} from 'lucide-react';
+import {ArrowLeft,ArrowRight,BookOpen,CheckCircle2,Headphones,Mic,MicOff,MessageCircle,Play,RotateCcw,ShieldCheck,Star,Volume2} from 'lucide-react';
 import {journeyMissions,PLAYLIST_ID,START_VIDEO_ID,REVIEW_DELAY_DAYS,normalizeJourney,recommendedReview} from '../data/learningJourney';
 import {scoreWordRecognition} from '../lib/wordRecognition';
 import {speakUS,speechRecognitionAvailable,soundEffect} from '../lib/sensory';
@@ -23,7 +23,7 @@ export function LearningJourney({lang,onUnit5,onPronounce,onCoach}:{lang:'en'|'v
  const complete=()=>{const entry={score,finishedAt:Date.now(),shadowDone:shadowCount,reviewAt:nextReview(score)};setRecords(prev=>({...prev,[mission.id]:entry}));setStep('complete');soundEffect('celebrate')};
  const nextLine=()=>{setLine(i=>Math.min(i+1,mission.lines.length-1));setHeard('');setResult(null);setVoiceError('')};
  const speak=async()=>{if(busy||!consent||!speechRecognitionAvailable())return;setBusy(true);setVoiceError('');setHeard('');setResult(null);try{const transcript=await recognizeEnglish();setHeard(transcript);setResult(scoreWordRecognition(mission.lines[line].en,transcript).score)}catch(e){setVoiceError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}};
- const message=coachChoice==='word'?('Em thử nhìn từ khóa trong câu: '+mission.lines[line].en+' Hãy đoán nghĩa rồi mới mở bản dịch.'):coachChoice==='sentence'?'Tìm chủ ngữ trước (ai?), sau đó động từ (làm gì?), cuối cùng là phần còn lại của câu.':coachChoice==='listen'?'Bấm Nghe mẫu ở tốc độ chậm, nhại theo từng nhóm từ. Em có thể thử nói mà không bật micro.';
+ const message=coachChoice==='word'?('Em thử nhìn từ khóa trong câu: '+mission.lines[line].en+' Hãy đoán nghĩa rồi mới mở bản dịch.'):coachChoice==='sentence'?'Tìm chủ ngữ trước (ai?), sau đó động từ (làm gì?), cuối cùng là phần còn lại của câu.':'Bấm Nghe mẫu ở tốc độ chậm, nhại theo từng nhóm từ. Em có thể thử nói mà không bật micro.';
  return <main className="mx-auto max-w-5xl space-y-5 pb-12">
   <section className="rounded-[1.7rem] bg-gradient-to-r from-indigo-900 to-emerald-800 px-5 py-7 text-white sm:px-8 sm:py-9">
    <p className="text-xs font-extrabold tracking-wider text-emerald-200">ENGLISH QUEST · LEARN ONE THING AT A TIME</p>
