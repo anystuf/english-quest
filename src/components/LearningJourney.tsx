@@ -1,8 +1,8 @@
 import {useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,ArrowRight,BookOpen,CheckCircle2,Headphones,Mic,MicOff,MessageCircle,Play,RotateCcw,ShieldCheck,Star,Volume2} from 'lucide-react';
-import {journeyMissions,PLAYLIST_ID,START_VIDEO_ID,REVIEW_DELAY_DAYS,normalizeJourney,recommendedReview} from '../data/learningJourney';
+import {journeyMissions,PLAYLIST_ID,START_VIDEO_ID,REVIEW_DELAY_DAYS,recommendedReview} from '../data/learningJourney';
 import {scoreWordRecognition} from '../lib/wordRecognition';
-import {speakUS,speechRecognitionAvailable,soundEffect} from '../lib/sensory';
+import {recognizeEnglish,speakUS,speechRecognitionAvailable,soundEffect} from '../lib/sensory';
 type Step='watch'|'check'|'shadow'|'complete';
 type Saved={score:number;finishedAt:number;shadowDone:number;reviewAt:number};
 const KEY='eq-journey-v1';
