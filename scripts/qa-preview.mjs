@@ -2,6 +2,7 @@
  * Guest-mode visual regression and WCAG smoke suite.
  * Run against local Vite: npm run dev -- --host 127.0.0.1; node scripts/qa-preview.mjs
  * Uses demo content only. No child accounts, microphone, or secret values.
+ * Stable selectors prevent false failures when the UI copy is translated.
  */
 import {chromium} from 'playwright';
 import {createRequire} from 'node:module';
@@ -33,19 +34,19 @@ try{
    const page=await context.newPage();
    page.on('pageerror',e=>errors.push(v.id+': browser error '+e.message));
    await page.goto(base,{waitUntil:'domcontentloaded'});
-   await page.getByRole('heading',{name:/Chọn bài|Choose a lesson/}).waitFor();
+   await page.getByTestId('learning-journey-title').waitFor();
    await page.addScriptTag({path:axePath});
    await inspect(page,v.id,'Learn');
 
    const sectionCards=page.getByTestId('unit-section-card');
    const count=await sectionCards.count();
    if(count!==8)errors.push(v.id+': expected 8 section cards, got '+count);
-   const expectedUnit5Videos=['zUl8CAI2BtI','p4iYlraEzd8','ckQvCLv1hlI','xuUDmNv-CII','UdTrA1OReAQ','_x5sP6pbVyI','lhpaieamu0c','-XboSEuNJLw'];
+   const expectedUnit5Videos=['5Wu-MiEwRnQ','0ZShEdRYVYs','ZhRX7zOoIGk','dq25WD8Us9c','7gnCf24o5ac','sDzZOktvhJI','98IEtXSP0Eg','98IEtXSP0Eg'];
    if(v.id==='phone-360'||v.id==='desktop-1280'){
     await page.route('**/www.youtube-nocookie.com/**',r=>r.fulfill({status:200,contentType:'text/html',body:'<html><body>QA video placeholder</body></html>'}));
     for(const [i,video] of expectedUnit5Videos.entries()){
      await sectionCards.nth(i).click();
-     await page.getByRole('button',{name:/Mở video|Load video/}).click();
+     await page.getByTestId('load-lesson-video').click();
      const src=await page.getByTestId('unit-section-video').getAttribute('src');
      if(!src?.includes(video))errors.push(v.id+': wrong video on Unit 5 lesson '+(i+1));
      await inspect(page,v.id,'Unit5Section'+(i+1));
@@ -57,9 +58,33 @@ try{
    // Video belongs to the main Learn journey, not to the separate Textbook Path.
    // Verify the matched Unit 5 video without sending data to YouTube in CI.
    await page.route('**/www.youtube-nocookie.com/**',r=>r.fulfill({status:200,contentType:'text/html',body:'<html><body>Video placeholder for visual QA</body></html>'}));
-   if(!(await page.getByTestId('unit-section-video').count()))await page.getByRole('button',{name:/Mở video|Load video/}).click();
+   if(!(await page.getByTestId('unit-section-video').count()))await page.getByTestId('load-lesson-video').click();
    const videoSrc=await page.locator('iframe[title*="Unit 5"]').getAttribute('src');
-   if(!videoSrc?.includes('zUl8CAI2BtI'))errors.push(v.id+': wrong Unit 5 video '+videoSrc);
+   if(!videoSrc?.includes('5Wu-MiEwRnQ'))errors.push(v.id+': wrong Unit 5 video '+videoSrc);
+
+   // Verify the eight sections and teacher videos in every Unit; never rely on
+   // third-party playback in CI. Looking Back and Project share a lecture.
+   if(v.id==='desktop-1280'){
+    const expected={
+     1:['8f6ffXl0dno','IeBG95n-2Cc','DXVB7_DBU9U','SxJXCJ0VbtU','35RTcJb_pTI','5O7d91fBsTw','5gQChtoqUgQ','5gQChtoqUgQ'],
+     2:['IVTyK8q-_Us','viyXs6_ATzU','b-H_gHnP3iQ','u7LP6TUiLaE','67GcT-gbP-0','crtqwgCQVw4','uc3zUmMsBQg','uc3zUmMsBQg'],
+     3:['bVAFCy7mFRU','1Q3GTKwm5F0','jbhIJ4anQbE','nL4fyqLAd7U','bIeTqbx923Y','tul-rf_ZTU8','vSbarci2o30','vSbarci2o30'],
+     4:['Dac06tO9wDE','IJLbWfrf0ac','OXho0kHuVs0','RFLqZZZBMCI','yRZv4ckBegw','RIJB41k1gB4','VW9eAAAtyF0','VW9eAAAtyF0']};
+    for(const unit of [1,2,3,4]){
+     await page.getByTestId('unit-card-'+unit).click();
+     const cards=page.getByTestId('unit-section-card');
+     if(await cards.count()!==8)errors.push('Unit '+unit+' should contain 8 sections');
+     for(let i=0;i<8;i++){
+      await cards.nth(i).click();
+      await page.getByTestId('load-lesson-video').click();
+      const video=await page.getByTestId('unit-section-video').getAttribute('src');
+      if(!video?.includes(expected[unit][i]))errors.push('Unit '+unit+' section '+(i+1)+': wrong teacher video '+video);
+      await inspect(page,v.id,'Unit'+unit+'Section'+(i+1));
+      if(i===0||i===7)await page.screenshot({path:directory+'/desktop-unit'+unit+'-section'+(i+1)+'.png',fullPage:true});
+     }
+    }
+    await page.getByTestId('unit-card-5').click();
+   }
 
    await page.getByRole('button',{name:/Unit 5/}).first().click();
    await inspect(page,v.id,'Unit5');
@@ -85,25 +110,27 @@ try{
    }
    if(v.id==='phone-390'){
      await page.getByRole('button',{name:/Học ngay|Learn/}).first().click();
-     await page.locator('label').filter({hasText:/học xong phần này|I studied this section/i}).locator('input[type=checkbox]').check();
+     await page.getByTestId('lesson-watched-checkbox').check();
      await page.getByRole('button',{name:/Làm thử thách|Start knowledge check/i}).click();
      for(const [i,n] of [0,1,2,0].entries())await page.locator('fieldset').nth(i).locator('input[type=radio]').nth(n).check();
-     await page.getByRole('button',{name:/Xem kết quả|Check answers/}).click();
-     await page.getByRole('button',{name:/Shadowing/}).last().click();
+     await page.getByTestId('grade-lesson').click();
+     await page.getByTestId('start-shadowing').click();
      for(let i=0;i<4;i++){
        await page.getByRole('button',{name:/Em đã nhại|I repeated/}).click();
-       if(i<3)await page.getByRole('button',{name:/Câu tiếp|Next/}).click();
+       if(i<3)await page.getByTestId('next-shadow-sentence').click();
      }
-     await page.getByRole('button',{name:/Hoàn thành|Finish/}).click();
+     await page.getByTestId('finish-shadowing').click();
      await page.getByText(/Hoàn thành một bài học|Mission completed/).waitFor();
      await page.getByText(/1\/8 bài đã học|1\/8 completed/).waitFor();
      await page.screenshot({path:directory+'/'+v.id+'-finished.png',fullPage:true});
-     await page.getByRole('button',{name:/Bài tiếp theo|Next section/}).click();
+     await page.getByTestId('next-lesson').click();
      await page.getByRole('heading',{name:'A Closer Look 1',exact:true}).waitFor();
      await page.screenshot({path:directory+'/'+v.id+'-next-section.png',fullPage:true});
    }
    await context.close();
  }
+}catch(error){
+ errors.push('Fatal browser QA error: '+(error instanceof Error?error.stack||error.message:String(error)));
 }finally{await browser.close();}
 writeFileSync(directory+'/summary.json',JSON.stringify({screens:report.length,issues:errors,report},null,2));
 console.log('QA screens:',report.length,'issues:',errors.length);

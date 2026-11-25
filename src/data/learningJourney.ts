@@ -1,14 +1,14 @@
 export type JourneyQuiz={id:string;skill:'meaning'|'use'|'grammar'|'sentence';prompt:string;options:[string,string,string];answer:0|1|2;why:string};
 export type JourneyMission={id:string;unit:1|2|3|4|5;topic:string;vi:string;target:string;description:string;quiz:JourneyQuiz[];lines:{en:string;vi:string}[]};
-export const PLAYLIST_ID='PLrf9nvyFUs3Q5BjjrZW_KsFE0L4BY_4i0';
-export const START_VIDEO_ID='wH3IDKbP9Yg';
-/** Verified individual Ms Kathy Grade 7 Global Success Getting Started lessons. Do not reuse a video from another Unit. */
+export const PLAYLIST_ID='PLfsnwY_9CvJLLxs13u8dx036ofRDZyuRy';
+export const START_VIDEO_ID='8f6ffXl0dno';
+/** Getting Started videos from the user-selected Cô Minh Hậu playlist. */
 export const lessonVideos={
-  1:{id:'wH3IDKbP9Yg',title:'Unit 1 – Hobbies · Getting Started'},
-  2:{id:'nytLSrBNVQk',title:'Unit 2 – Healthy Living · Getting Started'},
-  3:{id:'IXEQKclDDcs',title:'Unit 3 – Community Service · Getting Started'},
-  4:{id:'R4l5mvN49zo',title:'Unit 4 – Music and Arts · Getting Started'},
-  5:{id:'zUl8CAI2BtI',title:'Unit 5 – Food and Drink · Getting Started'},
+  1:{id:'8f6ffXl0dno',title:'Unit 1 – Hobbies · Getting Started'},
+  2:{id:'IVTyK8q-_Us',title:'Unit 2 – Healthy Living · Getting Started'},
+  3:{id:'bVAFCy7mFRU',title:'Unit 3 – Community Service · Getting Started'},
+  4:{id:'Dac06tO9wDE',title:'Unit 4 – Music and Arts · Getting Started'},
+  5:{id:'5Wu-MiEwRnQ',title:'Unit 5 – Food and Drink · Getting Started'},
 } as const;
 
 export const journeyMissions:JourneyMission[]=[

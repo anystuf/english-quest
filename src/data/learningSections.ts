@@ -1,30 +1,34 @@
-import {journeyMissions,type JourneyQuiz} from './learningJourney.ts';
+import type {JourneyQuiz} from './learningJourney.ts';
+import {practice12} from './sectionPractice12.ts';
+import {practice34} from './sectionPractice34.ts';
 export type UnitNo=1|2|3|4|5;
 export type SectionIndex=0|1|2|3|4|5|6|7;
 export const sectionNames=['Getting Started','A Closer Look 1','A Closer Look 2','Communication','Skills 1','Skills 2','Looking Back','Project'] as const;
-export const sectionPageByUnit:Partial<Record<UnitNo,readonly string[]>>={
+export const sectionPageByUnit:Record<UnitNo,readonly string[]>={
+ 1:['8–9','10–11','12','13','14','15','16','17'],
+ 2:['18–19','20','21','22','23','24–25','26','27'],
+ 3:['28–29','30','31','32–33','34','35','36','37'],
  4:['40–41','42','43–44','45','46','47','48','49'],
  5:['50–51','52','53–54','55','56','57','58','59'],
 };
-/** IDs verified against the actual parent-provided Ms Kathy playlist page.
- * Unit 3 Skills 1/2 are absent from the playlist, and its apparent Unit 3 slot #22
- * is explicitly a Grade 3 video: do not embed a misleading clip. */
-export const verifiedPlaylistVideos:Record<UnitNo,readonly (string|null)[]>={
- 1:['wH3IDKbP9Yg','CVQL19Cy14E','hUpAFSfH5Eo','Rxdfvnk6orw','c4XfoN7TSfk','cDrDDVMQ84I','Q8ohe5qZK_4','uxmW_D6LkfQ'],
- 2:['nytLSrBNVQk','yHDPNWv5Jis','hW6QKqig2e8','CXnIr-eJDMk','0ikD0N1fdpY','iBa9-VRvTrU','_MOIwuzm6Mk','cQap5k3ZflQ'],
- 3:['IXEQKclDDcs','QDDuPfKvpdc','XakUR99LqVs','JlfLaSlWSEQ',null,null,'AeIcZaeLKGM','MBd3XP03f0A'],
- 4:['R4l5mvN49zo','1RRGiRqO5co','hjNuE5Yax2w','foaeB3HzdtY','GC8AtaVduoU','ZnQTDHjsODI','v3M9JU7j_V8','lEE4rXaDeRw'],
- 5:['zUl8CAI2BtI','p4iYlraEzd8','ckQvCLv1hlI','xuUDmNv-CII','UdTrA1OReAQ','_x5sP6pbVyI','lhpaieamu0c','-XboSEuNJLw'],
+/** IDs checked against the exact user-provided Cô Minh Hậu playlist.
+ * Each Unit has seven lecture videos. Looking Back + Project share one video
+ * but remain separate textbook practice sections. */
+export const verifiedPlaylistVideos:Record<UnitNo,readonly string[]>={
+ 1:['8f6ffXl0dno','IeBG95n-2Cc','DXVB7_DBU9U','SxJXCJ0VbtU','35RTcJb_pTI','5O7d91fBsTw','5gQChtoqUgQ','5gQChtoqUgQ'],
+ 2:['IVTyK8q-_Us','viyXs6_ATzU','b-H_gHnP3iQ','u7LP6TUiLaE','67GcT-gbP-0','crtqwgCQVw4','uc3zUmMsBQg','uc3zUmMsBQg'],
+ 3:['bVAFCy7mFRU','1Q3GTKwm5F0','jbhIJ4anQbE','nL4fyqLAd7U','bIeTqbx923Y','tul-rf_ZTU8','vSbarci2o30','vSbarci2o30'],
+ 4:['Dac06tO9wDE','IJLbWfrf0ac','OXho0kHuVs0','RFLqZZZBMCI','yRZv4ckBegw','RIJB41k1gB4','VW9eAAAtyF0','VW9eAAAtyF0'],
+ 5:['5Wu-MiEwRnQ','0ZShEdRYVYs','ZhRX7zOoIGk','dq25WD8Us9c','7gnCf24o5ac','sDzZOktvhJI','98IEtXSP0Eg','98IEtXSP0Eg'],
 };
-export const supplementaryVideoNotes:Partial<Record<UnitNo,string>>={5:'Getting Started: video cùng chủ đề được bổ sung ngoài playlist vì playlist không có mục này.'};
 export const sectionFocusByUnit:Record<UnitNo,readonly string[]>={
- 1:['Giới thiệu sở thích','Từ vựng và phát âm sở thích','Hiện tại đơn','Hỏi và nói về sở thích','Đọc và nói về một sở thích','Nghe và viết về sở thích','Ôn kiến thức Unit 1','Dự án về sở thích'],
- 2:['Nói về sức khỏe','Từ vựng và phát âm sức khỏe','Câu đơn và lời khuyên','Giao tiếp về thói quen tốt','Đọc và nói về cuộc sống khỏe','Nghe và viết về thói quen','Ôn kiến thức Unit 2','Dự án sống khỏe'],
+ 1:['Giới thiệu sở thích','Từ vựng và phát âm sở thích','Động từ yêu thích + V-ing','Hỏi và nói về sở thích','Đọc và nói về một sở thích','Nghe và viết về sở thích','Ôn kiến thức Unit 1','Dự án về sở thích'],
+ 2:['Nói về sức khỏe','Từ vựng và phát âm sức khỏe','Câu đơn: chủ ngữ và vị ngữ','Giao tiếp về thói quen tốt','Đọc và nói về cuộc sống khỏe','Nghe và viết về thói quen','Ôn kiến thức Unit 2','Dự án sống khỏe'],
  3:['Giới thiệu hoạt động tình nguyện','Từ vựng và phát âm cộng đồng','Quá khứ đơn','Giao tiếp về tình nguyện','Đọc và nói về dự án cộng đồng','Nghe và viết về dự án cộng đồng','Ôn kiến thức Unit 3','Dự án cộng đồng'],
  4:['Sở thích nghệ thuật','Người, địa điểm và phát âm /ʃ/, /ʒ/','So sánh like, different from, as ... as','Trao đổi về âm nhạc, nghệ thuật','Đọc và nói về nghệ thuật','Nghe và viết về nghệ thuật','Ôn Unit 4','Dự án về âm nhạc và nghệ thuật'],
  5:['Gọi món và phân loại Food / Drink','Nguyên liệu, đơn vị đo và phát âm','Some, any, how much, how many','Hỏi giá và món ăn yêu thích','Đọc và giới thiệu món phở','Nghe, viết về thói quen ăn uống','Ôn từ vựng và ngữ pháp','Thiết kế poster thói quen ăn uống'],
 };
-export type JourneySection={id:string;unit:UnitNo;index:SectionIndex;name:string;focus:string;page?:string;videoId:string|null;source:'playlist'|'supplementary'|'unavailable';quiz:JourneyQuiz[];lines:{en:string;vi:string}[];specific:boolean};
+export type JourneySection={id:string;unit:UnitNo;index:SectionIndex;name:string;focus:string;page?:string;videoId:string|null;source:'playlist';quiz:JourneyQuiz[];lines:{en:string;vi:string}[];specific:boolean};
 type QuizRow=[string,[string,string,string],0|1|2,string];
 const skills=['meaning','use','grammar','sentence'] as const;
 const unit5Rows:QuizRow[][]=[
@@ -36,7 +40,7 @@ const unit5Rows:QuizRow[][]=[
  ],
  [
   ['“A teaspoon” là gì?',['Một chai','Một thìa cà phê','Một cái bát'],1,'Teaspoon là thìa cà phê.'],
-  ['Chọn cụm từ đúng.',['make a photo','play a photo','take a photo'],2,'Ta dùng take a photo.'],
+  ['Chọn cụm từ chỉ đơn vị đo phù hợp.',['a slice of water','a bottle of mineral water','a kilogram of tea cups'],1,'A bottle of mineral water = một chai nước khoáng.'],
   ['We need two ___ of sugar.',['tablespoons','tablespoon','tablespooning'],0,'Sau two dùng danh từ số nhiều.'],
   ['Chọn câu đúng về nguyên liệu.',['We need an water.','We need a litre of water.','We needs a water.'],1,'A litre of water là một lít nước.']
  ],
@@ -88,14 +92,16 @@ const unit5Lines:{en:string;vi:string}[][]=[
  [{en:'Welcome to my food poster!',vi:'Chào mừng đến với áp phích ẩm thực của mình!'},{en:'People eat noodles for breakfast.',vi:'Mọi người ăn phở vào bữa sáng.'},{en:'They often have rice for lunch.',vi:'Họ thường ăn cơm vào bữa trưa.'},{en:'Thank you for listening!',vi:'Cảm ơn đã lắng nghe!'}],
 ];
 export function sectionsForUnit(unit:UnitNo):JourneySection[]{
- const base=journeyMissions.find(m=>m.unit===unit)!;
  return sectionNames.map((name,i)=>{
   const index=i as SectionIndex;
   const videoId=verifiedPlaylistVideos[unit][i];
-  const source=videoId===null?'unavailable':(unit===5&&i===0?'supplementary':'playlist');
-  const specific=unit===5||i===0;
-  const quiz=unit===5?unit5Rows[i].map(([prompt,options,answer,why],k)=>({id:'u5-'+i+'-'+k,skill:skills[k],prompt,options,answer,why})):base.quiz.map(q=>({...q,id:base.id+'-'+i+'-'+q.id}));
-  return {id:'u'+unit+'-s'+i,unit,index,name,focus:sectionFocusByUnit[unit][i],page:sectionPageByUnit[unit]?.[i],videoId,source,quiz,lines:unit===5?unit5Lines[i]:base.lines,specific};
+  const source='playlist' as const;
+  const practice=unit===5?null:unit<=2?practice12[unit as 1|2][i]:practice34[unit as 3|4][i];
+  const quiz:JourneyQuiz[]=unit===5
+   ? unit5Rows[i].map(([prompt,options,answer,why],k)=>({id:'u5-'+i+'-'+k,skill:skills[k],prompt,options,answer,why}))
+   : practice!.q.map(([prompt,options,answer,why],k)=>({id:'u'+unit+'-'+i+'-'+k,skill:skills[k],prompt,options,answer,why}));
+  const lines=unit===5?unit5Lines[i]:practice!.lines.map(([en,vi])=>({en,vi}));
+  return {id:'u'+unit+'-s'+i,unit,index,name,focus:sectionFocusByUnit[unit][i],page:sectionPageByUnit[unit][i],videoId,source,quiz,lines,specific:true};
  });
 }
 export function sectionKey(unit:UnitNo,index:SectionIndex):string{return 'u'+unit+'-s'+index;}
