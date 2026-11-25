@@ -40,7 +40,7 @@ try{
    const sectionCards=page.getByTestId('unit-section-card');
    const count=await sectionCards.count();
    if(count!==8)errors.push(v.id+': expected 8 section cards, got '+count);
-   const expectedUnit5Videos=['zUl8CAI2BtI','p4iYlraEzd8','ckQvCLv1hlI','xuUDmNv-CII','UdTrA1OReAQ','_x5sP6pbVyI','lhpaieamu0c','-XboSEuNJLw'];
+   const expectedUnit5Videos=['5Wu-MiEwRnQ','0ZShEdRYVYs','ZhRX7zOoIGk','dq25WD8Us9c','7gnCf24o5ac','sDzZOktvhJI','98IEtXSP0Eg','98IEtXSP0Eg'];
    if(v.id==='phone-360'||v.id==='desktop-1280'){
     await page.route('**/www.youtube-nocookie.com/**',r=>r.fulfill({status:200,contentType:'text/html',body:'<html><body>QA video placeholder</body></html>'}));
     for(const [i,video] of expectedUnit5Videos.entries()){
@@ -59,7 +59,7 @@ try{
    await page.route('**/www.youtube-nocookie.com/**',r=>r.fulfill({status:200,contentType:'text/html',body:'<html><body>Video placeholder for visual QA</body></html>'}));
    if(!(await page.getByTestId('unit-section-video').count()))await page.getByRole('button',{name:/Mở video|Load video/}).click();
    const videoSrc=await page.locator('iframe[title*="Unit 5"]').getAttribute('src');
-   if(!videoSrc?.includes('zUl8CAI2BtI'))errors.push(v.id+': wrong Unit 5 video '+videoSrc);
+   if(!videoSrc?.includes('5Wu-MiEwRnQ'))errors.push(v.id+': wrong Unit 5 video '+videoSrc);
 
    await page.getByRole('button',{name:/Unit 5/}).first().click();
    await inspect(page,v.id,'Unit5');
