@@ -40,14 +40,14 @@ export function LearningJourney({lang,onTextbook,onPronounce}:{lang:'en'|'vi';on
  const speak=async()=>{if(busy||!consent||!speechRecognitionAvailable())return;setBusy(true);setVoiceError('');setHeard('');setResult(null);try{const transcript=await recognizeEnglish();setHeard(transcript);setResult(scoreWordRecognition(section.lines[line].en,transcript).score)}catch(e){setVoiceError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}};
  const message=coachChoice==='word'?('Em thử nhìn từ khóa trong câu: '+section.lines[line].en+' Hãy đoán nghĩa rồi mới mở bản dịch.'):coachChoice==='sentence'?'Tìm chủ ngữ trước (ai?), sau đó động từ (làm gì?), cuối cùng là phần còn lại của câu.':'Bấm Nghe mẫu ở tốc độ chậm, nhại theo từng nhóm từ. Em có thể thử nói mà không bật micro.';
  return <main className="mx-auto max-w-5xl space-y-5 pb-12">
-  <section className="rounded-[1.7rem] bg-gradient-to-r from-indigo-900 to-emerald-800 px-5 py-7 text-white sm:px-8 sm:py-9">
+  <section className="rounded-[1.5rem] bg-gradient-to-r from-indigo-900 to-emerald-800 px-4 py-4 text-white sm:px-8 sm:py-9">
    <p className="text-xs font-extrabold tracking-wider text-emerald-200">ENGLISH QUEST · LEARN ONE THING AT A TIME</p>
-   <h1 data-testid="learning-journey-title" className="mt-2 text-3xl font-black sm:text-4xl">🌟 {vi?'Chọn bài · Học từng bước':'Choose a lesson · Learn step by step'}</h1>
-   <p className="mt-3 max-w-2xl text-sm text-indigo-100">{vi?'Unit 5 có 8 phần học từ Getting Started đến Project. Chọn một phần, xem đúng video, làm bài và shadowing. Ôn Unit 1–4 khi cần.':'Unit 5 includes eight sections from Getting Started to Project. Choose a section for its lesson video, quiz and shadowing. Review Units 1–4 as needed.'}</p>
+   <h1 data-testid="learning-journey-title" className="mt-1 text-2xl font-black sm:text-4xl">🌟 {vi?'Chọn bài · Học ngay':'Choose a lesson · Start learning'}</h1>
+   <p className="mt-2 max-w-2xl text-sm text-indigo-100">{vi?'Unit 5: tám bài học. Unit 1–4: ôn lại khi cần.':'Eight lessons in Unit 5. Review Units 1–4 when needed.'}</p>
   </section>
   <section className="rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
    <h2 className="font-black">{vi?'Chọn Unit':'Choose a Unit'}</h2>
-   <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">{journeyMissions.map(m=><button data-testid={"unit-card-"+m.unit} key={m.id} onClick={()=>choose(m.id)} aria-pressed={m.id===id} className={'min-h-14 rounded-xl border-2 px-3 py-3 text-left text-sm font-bold '+(m.id===id?'border-indigo-700 bg-indigo-50 text-indigo-950':'border-slate-200 bg-white text-slate-700')}><span className="block">Unit {m.unit} {sectionsForUnit(m.unit).every(item=>records[item.id]?.finishedAt)?'✓':''}</span><span className="mt-1 block text-[11px] font-normal">{m.vi}</span></button>)}</div>
+   <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-5">{journeyMissions.map(m=><button data-testid={"unit-card-"+m.unit} key={m.id} onClick={()=>choose(m.id)} aria-pressed={m.id===id} className={'min-h-14 rounded-xl border-2 px-3 py-3 text-left text-sm font-bold '+(m.id===id?'border-indigo-700 bg-indigo-50 text-indigo-950':'border-slate-200 bg-white text-slate-700')}><span className="block">Unit {m.unit} {sectionsForUnit(m.unit).every(item=>records[item.id]?.finishedAt)?'✓':''}</span><span className="mt-1 block text-[11px] font-normal">{m.vi}</span></button>)}</div>
    <p className="mt-3 text-xs text-slate-700">{vi?'Đang học Unit 5? Hãy học lần lượt tám phần. Unit 1–4 dành cho ôn lại những phần còn yếu.':'Study all eight sections of Unit 5 in order; use Units 1–4 for review.'}</p>
   </section>
   <section className="rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
