@@ -40,7 +40,7 @@ const unit5Rows:QuizRow[][]=[
  ],
  [
   ['“A teaspoon” là gì?',['Một chai','Một thìa cà phê','Một cái bát'],1,'Teaspoon là thìa cà phê.'],
-  ['Chọn cụm từ đúng.',['make a photo','play a photo','take a photo'],2,'Ta dùng take a photo.'],
+  ['Chọn cụm từ chỉ đơn vị đo phù hợp.',['a slice of water','a bottle of mineral water','a kilogram of tea cups'],1,'A bottle of mineral water = một chai nước khoáng.'],
   ['We need two ___ of sugar.',['tablespoons','tablespoon','tablespooning'],0,'Sau two dùng danh từ số nhiều.'],
   ['Chọn câu đúng về nguyên liệu.',['We need an water.','We need a litre of water.','We needs a water.'],1,'A litre of water là một lít nước.']
  ],
