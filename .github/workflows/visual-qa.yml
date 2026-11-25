@@ -24,11 +24,20 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Start local Vite and run screenshot/accessibility suite
         run: |
+          set -euo pipefail
           npm run dev -- --host 127.0.0.1 > /tmp/english-quest-vite.log 2>&1 &
+          VITE_PID=$!
+          trap 'kill "$VITE_PID" 2>/dev/null || true' EXIT
+          ready=0
           for i in $(seq 1 50); do
-            if curl --fail --silent http://127.0.0.1:5173/ > /dev/null; then break; fi
+            if curl --fail --silent http://127.0.0.1:5173/ > /dev/null; then ready=1; break; fi
             sleep 1
           done
+          if [ "$ready" -ne 1 ]; then
+            echo "::error::Local Vite server did not become ready"
+            tail -80 /tmp/english-quest-vite.log
+            exit 1
+          fi
           node scripts/qa-preview.mjs
       - name: Upload visual evidence
         if: always()
