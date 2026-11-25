@@ -1,4 +1,6 @@
-import {journeyMissions,type JourneyQuiz} from './learningJourney.ts';
+import type {JourneyQuiz} from './learningJourney.ts';
+import {practice12} from './sectionPractice12.ts';
+import {practice34} from './sectionPractice34.ts';
 export type UnitNo=1|2|3|4|5;
 export type SectionIndex=0|1|2|3|4|5|6|7;
 export const sectionNames=['Getting Started','A Closer Look 1','A Closer Look 2','Communication','Skills 1','Skills 2','Looking Back','Project'] as const;
@@ -20,13 +22,13 @@ export const verifiedPlaylistVideos:Record<UnitNo,readonly string[]>={
  5:['5Wu-MiEwRnQ','0ZShEdRYVYs','ZhRX7zOoIGk','dq25WD8Us9c','7gnCf24o5ac','sDzZOktvhJI','98IEtXSP0Eg','98IEtXSP0Eg'],
 };
 export const sectionFocusByUnit:Record<UnitNo,readonly string[]>={
- 1:['Giới thiệu sở thích','Từ vựng và phát âm sở thích','Hiện tại đơn','Hỏi và nói về sở thích','Đọc và nói về một sở thích','Nghe và viết về sở thích','Ôn kiến thức Unit 1','Dự án về sở thích'],
- 2:['Nói về sức khỏe','Từ vựng và phát âm sức khỏe','Câu đơn và lời khuyên','Giao tiếp về thói quen tốt','Đọc và nói về cuộc sống khỏe','Nghe và viết về thói quen','Ôn kiến thức Unit 2','Dự án sống khỏe'],
+ 1:['Giới thiệu sở thích','Từ vựng và phát âm sở thích','Động từ yêu thích + V-ing','Hỏi và nói về sở thích','Đọc và nói về một sở thích','Nghe và viết về sở thích','Ôn kiến thức Unit 1','Dự án về sở thích'],
+ 2:['Nói về sức khỏe','Từ vựng và phát âm sức khỏe','Câu đơn: chủ ngữ và vị ngữ','Giao tiếp về thói quen tốt','Đọc và nói về cuộc sống khỏe','Nghe và viết về thói quen','Ôn kiến thức Unit 2','Dự án sống khỏe'],
  3:['Giới thiệu hoạt động tình nguyện','Từ vựng và phát âm cộng đồng','Quá khứ đơn','Giao tiếp về tình nguyện','Đọc và nói về dự án cộng đồng','Nghe và viết về dự án cộng đồng','Ôn kiến thức Unit 3','Dự án cộng đồng'],
  4:['Sở thích nghệ thuật','Người, địa điểm và phát âm /ʃ/, /ʒ/','So sánh like, different from, as ... as','Trao đổi về âm nhạc, nghệ thuật','Đọc và nói về nghệ thuật','Nghe và viết về nghệ thuật','Ôn Unit 4','Dự án về âm nhạc và nghệ thuật'],
  5:['Gọi món và phân loại Food / Drink','Nguyên liệu, đơn vị đo và phát âm','Some, any, how much, how many','Hỏi giá và món ăn yêu thích','Đọc và giới thiệu món phở','Nghe, viết về thói quen ăn uống','Ôn từ vựng và ngữ pháp','Thiết kế poster thói quen ăn uống'],
 };
-export type JourneySection={id:string;unit:UnitNo;index:SectionIndex;name:string;focus:string;page?:string;videoId:string|null;source:'playlist'|'supplementary'|'unavailable';quiz:JourneyQuiz[];lines:{en:string;vi:string}[];specific:boolean};
+export type JourneySection={id:string;unit:UnitNo;index:SectionIndex;name:string;focus:string;page?:string;videoId:string|null;source:'playlist';quiz:JourneyQuiz[];lines:{en:string;vi:string}[];specific:boolean};
 type QuizRow=[string,[string,string,string],0|1|2,string];
 const skills=['meaning','use','grammar','sentence'] as const;
 const unit5Rows:QuizRow[][]=[
@@ -90,14 +92,16 @@ const unit5Lines:{en:string;vi:string}[][]=[
  [{en:'Welcome to my food poster!',vi:'Chào mừng đến với áp phích ẩm thực của mình!'},{en:'People eat noodles for breakfast.',vi:'Mọi người ăn phở vào bữa sáng.'},{en:'They often have rice for lunch.',vi:'Họ thường ăn cơm vào bữa trưa.'},{en:'Thank you for listening!',vi:'Cảm ơn đã lắng nghe!'}],
 ];
 export function sectionsForUnit(unit:UnitNo):JourneySection[]{
- const base=journeyMissions.find(m=>m.unit===unit)!;
  return sectionNames.map((name,i)=>{
   const index=i as SectionIndex;
   const videoId=verifiedPlaylistVideos[unit][i];
   const source='playlist' as const;
-  const specific=unit===5||i===0;
-  const quiz=unit===5?unit5Rows[i].map(([prompt,options,answer,why],k)=>({id:'u5-'+i+'-'+k,skill:skills[k],prompt,options,answer,why})):base.quiz.map(q=>({...q,id:base.id+'-'+i+'-'+q.id}));
-  return {id:'u'+unit+'-s'+i,unit,index,name,focus:sectionFocusByUnit[unit][i],page:sectionPageByUnit[unit]?.[i],videoId,source,quiz,lines:unit===5?unit5Lines[i]:base.lines,specific};
+  const practice=unit===5?null:unit<=2?practice12[unit as 1|2][i]:practice34[unit as 3|4][i];
+  const quiz:JourneyQuiz[]=unit===5
+   ? unit5Rows[i].map(([prompt,options,answer,why],k)=>({id:'u5-'+i+'-'+k,skill:skills[k],prompt,options,answer,why}))
+   : practice!.q.map(([prompt,options,answer,why],k)=>({id:'u'+unit+'-'+i+'-'+k,skill:skills[k],prompt,options,answer,why}));
+  const lines=unit===5?unit5Lines[i]:practice!.lines.map(([en,vi])=>({en,vi}));
+  return {id:'u'+unit+'-s'+i,unit,index,name,focus:sectionFocusByUnit[unit][i],page:sectionPageByUnit[unit][i],videoId,source,quiz,lines,specific:true};
  });
 }
 export function sectionKey(unit:UnitNo,index:SectionIndex):string{return 'u'+unit+'-s'+index;}
