@@ -20,7 +20,7 @@ test('Every Unit has exactly eight navigable textbook sections, including separa
   assert.ok(lessons.every((x,i)=>x.index===i&&x.id===sectionKey(unit,i)&&x.quiz.length===4&&x.lines.length===4));
  }
 });
-test('Unit 5 has a distinct correctly mapped video and original checkpoint for each of its eight sections',()=>{
+test('Unit 5 has seven correctly mapped videos and eight unique section checkpoints',()=>{
  const lessons=sectionsForUnit(5);
  assert.equal(lessons.filter(x=>x.videoId).length,8);
  assert.equal(new Set(lessons.map(x=>x.videoId)).size,7);
@@ -46,4 +46,42 @@ test('The selected playlist provides all Units and shared Looking Back–Project
   assert.equal(new Set(ids).size,7);
   assert.equal(ids[6],ids[7],'Looking Back and Project share the teacher video');
  }
+});
+
+test('All five Units have 160 individual section questions and 160 short shadowing lines',()=>{
+ const all=[1,2,3,4,5].flatMap(unit=>sectionsForUnit(unit));
+ assert.equal(all.length,40);
+ assert.equal(all.reduce((n,x)=>n+x.quiz.length,0),160);
+ assert.equal(all.reduce((n,x)=>n+x.lines.length,0),160);
+ assert.equal(new Set(all.map(x=>x.id)).size,40);
+ assert.equal(new Set(all.flatMap(x=>x.quiz.map(q=>q.id))).size,160);
+ for(const x of all){
+  assert.equal(x.specific,true,'Each section must have original practice, not a reused Unit-level quiz');
+  assert.ok(x.videoId&&/^[A-Za-z0-9_-]{11}$/.test(x.videoId));
+  assert.ok(x.page);
+  assert.deepEqual(x.quiz.map(q=>q.skill),['meaning','use','grammar','sentence']);
+  for(const q of x.quiz){
+   assert.ok(q.prompt.length>=12);
+   assert.equal(q.options.length,3);
+   assert.equal(new Set(q.options).size,3,'Distractors must be distinct');
+   assert.ok(q.answer>=0&&q.answer<3);
+   assert.ok(q.why.length>=10);
+  }
+  assert.equal(x.lines.length,4);
+  for(const line of x.lines)assert.ok(line.en.length>=12&&line.vi.length>=8);
+ }
+ for(const unit of [1,2,3,4,5]){
+  const lessons=sectionsForUnit(unit);
+  assert.equal(new Set(lessons.map(x=>x.quiz[0].prompt)).size,8,'Section checkpoints must have distinct first questions');
+  assert.equal(new Set(lessons.map(x=>x.lines[0].en)).size,8,'Section shadowing must be contextual, not duplicated across sections');
+ }
+});
+test('Every section maps to the exact new 2026 selected Cô Minh Hậu playlist IDs',()=>{
+ const expected={
+ 1:['8f6ffXl0dno','IeBG95n-2Cc','DXVB7_DBU9U','SxJXCJ0VbtU','35RTcJb_pTI','5O7d91fBsTw','5gQChtoqUgQ','5gQChtoqUgQ'],
+ 2:['IVTyK8q-_Us','viyXs6_ATzU','b-H_gHnP3iQ','u7LP6TUiLaE','67GcT-gbP-0','crtqwgCQVw4','uc3zUmMsBQg','uc3zUmMsBQg'],
+ 3:['bVAFCy7mFRU','1Q3GTKwm5F0','jbhIJ4anQbE','nL4fyqLAd7U','bIeTqbx923Y','tul-rf_ZTU8','vSbarci2o30','vSbarci2o30'],
+ 4:['Dac06tO9wDE','IJLbWfrf0ac','OXho0kHuVs0','RFLqZZZBMCI','yRZv4ckBegw','RIJB41k1gB4','VW9eAAAtyF0','VW9eAAAtyF0'],
+ 5:['5Wu-MiEwRnQ','0ZShEdRYVYs','ZhRX7zOoIGk','dq25WD8Us9c','7gnCf24o5ac','sDzZOktvhJI','98IEtXSP0Eg','98IEtXSP0Eg']};
+ for(const unit of [1,2,3,4,5])assert.deepEqual(verifiedPlaylistVideos[unit],expected[unit]);
 });
